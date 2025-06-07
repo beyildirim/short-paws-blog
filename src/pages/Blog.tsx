@@ -59,7 +59,7 @@ function Blog() {
           {blogPosts.map((post) => (
             <article 
               key={post.id}
-              className="bg-pink-50 rounded-lg p-6 transition-transform duration-300 hover:transform hover:scale-[1.02] border-2 border-purple-200"
+              className="bg-pink-50 rounded-lg p-6 transition-transform duration-300 transform hover:scale-[1.02] border-2 border-purple-200"
             >
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 bg-white p-3 rounded-full shadow-md">
