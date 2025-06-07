@@ -9,7 +9,7 @@ export interface BlogPost {
   readTime: string;
   excerpt: string;
   content: string;
-  icon: any;
+  icon: React.ElementType;
 }
 
 interface BlogState {

@@ -59,7 +59,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Professional Overview */}
+      {/* What I Do */}
       <div className={`bg-pink-100 ${settings.theme.borderStyle} border-[rgb(var(--color-primary))] rounded-lg p-6 mb-8 shadow-lg relative`}>
         <div className="absolute bottom-0 left-0 transform -translate-x-1/2 translate-y-1/2">
           <Flower2 className="w-12 h-12 text-[rgb(var(--color-accent))]" />

@@ -82,7 +82,7 @@ export default function Dashboard() {
   };
 
   const handleSaveSettings = () => {
-    const updatedSettings: any = {
+    const updatedSettings: Record<string, string> = {
       title: settingsData.title,
       description: settingsData.description,
     };

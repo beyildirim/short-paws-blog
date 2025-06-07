@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Clock, ChevronLeft, BookOpen, Boxes, Cat, Brain, HeartHandshake } from 'lucide-react';
+import { Calendar, Clock, ChevronLeft, Boxes, Cat, Brain, HeartHandshake } from 'lucide-react';
 
 interface BlogPost {
   id: string;
