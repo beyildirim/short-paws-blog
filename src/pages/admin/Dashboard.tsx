@@ -15,7 +15,7 @@ import {
   Phone
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
-import { useBlogStore, BlogPost } from '../../store/blogStore';
+import { useBlogStore, BlogPost, IconName } from '../../store/blogStore';
 import { useSettingsStore } from '../../store/settingsStore';
 
 export default function Dashboard() {
@@ -32,6 +32,7 @@ export default function Dashboard() {
     readTime: '',
     excerpt: '',
     content: '',
+    icon: 'cat' as IconName,
   });
   const [settingsData, setSettingsData] = useState({
     title: settings.title,
@@ -53,6 +54,7 @@ export default function Dashboard() {
       readTime: post.readTime,
       excerpt: post.excerpt,
       content: post.content,
+      icon: post.icon,
     });
   };
 
@@ -61,10 +63,7 @@ export default function Dashboard() {
       editPost(editing, formData);
       setEditing(null);
     } else if (showAddForm) {
-      addPost({
-        ...formData,
-        icon: 'Cat',
-      });
+      addPost(formData);
       setShowAddForm(false);
     }
     setFormData({
@@ -72,6 +71,7 @@ export default function Dashboard() {
       readTime: '',
       excerpt: '',
       content: '',
+      icon: 'cat',
     });
   };
 
