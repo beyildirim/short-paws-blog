@@ -1,16 +1,23 @@
-import React from 'react';
+import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Cat, Stars, Sparkles, Flower, Flower2, BookOpen, Lock } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useSettingsStore } from './store/settingsStore';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
-import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { MobileNav } from './components/MobileNav';
+import { LoadingSpinner } from './components/LoadingSpinner';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ROUTES, ICON_SIZE, ANIMATION_DURATION } from './constants';
+
+// Lazy load pages for better performance
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Login = lazy(() => import('./pages/admin/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   const { settings } = useSettingsStore();
@@ -30,61 +37,68 @@ function App() {
   const accentRgb = hexToRgb(settings.theme.accentColor);
 
   return (
-    <Router>
-      <Helmet>
-        <title>{settings.title}</title>
-        <meta name="description" content={settings.description} />
-        <style>
-          {`
-            :root {
-              --color-primary: ${primaryRgb ? `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}` : '147, 51, 234'};
-              --color-secondary: ${secondaryRgb ? `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}` : '236, 72, 153'};
-              --color-accent: ${accentRgb ? `${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}` : '253, 224, 71'};
-            }
-          `}
-        </style>
-      </Helmet>
-      <Routes>
+    <ErrorBoundary>
+      <Router>
+        <Helmet>
+          <title>{settings.title}</title>
+          <meta name="description" content={settings.description} />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <style>
+            {`
+              :root {
+                --color-primary: ${primaryRgb ? `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}` : '147, 51, 234'};
+                --color-secondary: ${secondaryRgb ? `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}` : '236, 72, 153'};
+                --color-accent: ${accentRgb ? `${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}` : '253, 224, 71'};
+              }
+            `}
+          </style>
+        </Helmet>
+        
+        <Suspense fallback={<LoadingSpinner fullScreen message="Loading page..." />}>
+          <Routes>
         <Route
           path="/*"
           element={
             <div className={`min-h-screen bg-purple-200 p-4 font-${settings.theme.fontFamily.toLowerCase()}`}>
+              {/* Mobile Navigation */}
+              <MobileNav />
+              
               {/* Flower decorations */}
-              <div className="fixed top-0 left-0 w-24 h-24 transform -rotate-12">
-                <Flower2 className="w-full h-full text-[rgb(var(--color-secondary))] animate-[spin_20s_linear_infinite]" />
+              <div className="fixed top-0 left-0 w-24 h-24 transform -rotate-12 pointer-events-none">
+                <Flower2 className="w-full h-full text-[rgb(var(--color-secondary))]" style={{ animation: `spin ${ANIMATION_DURATION.SPIN_MEDIUM}s linear infinite` }} />
               </div>
-              <div className="fixed top-0 right-0 w-24 h-24 transform rotate-12">
-                <Flower className="w-full h-full text-[rgb(var(--color-primary))] animate-[spin_15s_linear_infinite]" />
+              <div className="fixed top-0 right-0 w-24 h-24 transform rotate-12 pointer-events-none">
+                <Flower className="w-full h-full text-[rgb(var(--color-primary))]" style={{ animation: `spin ${ANIMATION_DURATION.SPIN_FAST}s linear infinite` }} />
               </div>
-              <div className="fixed bottom-0 left-0 w-24 h-24 transform rotate-45">
-                <Flower2 className="w-12 h-12 text-[rgb(var(--color-accent))] animate-[spin_25s_linear_infinite]" />
+              <div className="fixed bottom-0 left-0 w-24 h-24 transform rotate-45 pointer-events-none">
+                <Flower2 className="w-12 h-12 text-[rgb(var(--color-accent))]" style={{ animation: `spin ${ANIMATION_DURATION.SPIN_SLOW}s linear infinite` }} />
               </div>
-              <div className="fixed bottom-0 right-0 w-24 h-24 transform -rotate-45">
-                <Flower className="w-12 h-12 text-[rgb(var(--color-secondary))] animate-[spin_18s_linear_infinite]" />
+              <div className="fixed bottom-0 right-0 w-24 h-24 transform -rotate-45 pointer-events-none">
+                <Flower className="w-12 h-12 text-[rgb(var(--color-secondary))]" style={{ animation: `spin ${ANIMATION_DURATION.SPIN_VERY_FAST}s linear infinite` }} />
               </div>
 
-              {/* Navigation */}
-              <nav className={`bg-white ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] rounded-lg p-4 mb-8 shadow-lg relative overflow-hidden`}>
+              {/* Navigation - Desktop */}
+              <nav className={`hidden md:block bg-white ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] rounded-lg p-4 mb-8 shadow-lg relative overflow-hidden`} aria-label="Main navigation">
                 <div className="flex justify-center items-center gap-8">
-                  <Link to="/" className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <Cat className="inline-block mr-2" size={24} />
-                    Home
+                  <Link to={ROUTES.HOME} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                    <Cat className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                    <span>Home</span>
                   </Link>
-                  <Link to="/about" className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <Stars className="inline-block mr-2" size={24} />
-                    About
+                  <Link to={ROUTES.ABOUT} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                    <Stars className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                    <span>About</span>
                   </Link>
-                  <Link to="/blog" className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <BookOpen className="inline-block mr-2" size={24} />
-                    Blog
+                  <Link to={ROUTES.BLOG} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                    <BookOpen className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                    <span>Blog</span>
                   </Link>
-                  <Link to="/contact" className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <Sparkles className="inline-block mr-2" size={24} />
-                    Contact
+                  <Link to={ROUTES.CONTACT} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                    <Sparkles className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                    <span>Contact</span>
                   </Link>
-                  <Link to="/admin/login" className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <Lock className="inline-block mr-2" size={24} />
-                    Admin
+                  <Link to={ROUTES.ADMIN_LOGIN} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                    <Lock className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                    <span>Admin</span>
                   </Link>
                 </div>
               </nav>
@@ -92,27 +106,31 @@ function App() {
               {/* Main content */}
               <div className="max-w-4xl mx-auto">
                 <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:postId" element={<BlogPost />} />
+                  <Route path={ROUTES.HOME} element={<Home />} />
+                  <Route path={ROUTES.ABOUT} element={<About />} />
+                  <Route path={ROUTES.CONTACT} element={<Contact />} />
+                  <Route path={ROUTES.BLOG} element={<Blog />} />
+                  <Route path={ROUTES.BLOG_POST} element={<BlogPost />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
             </div>
           }
         />
-        <Route path="/admin/login" element={<Login />} />
+        <Route path={ROUTES.ADMIN_LOGIN} element={<Login />} />
         <Route
-          path="/admin"
+          path={ROUTES.ADMIN}
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+        </Suspense>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { STORAGE_KEYS } from '../constants';
 
 interface ThemeSettings {
   primaryColor: string;
@@ -48,6 +49,7 @@ interface SettingsState {
 const defaultSettings: Settings = {
   title: "Gizmeli Kedi's Personal Website",
   description: "Planning Specialist turning chaos into order, one plan at a time",
+  // SHA-256 hash of 'REDACTED' - users type plain text, system hashes and compares
   adminPassword: "REDACTED",
   theme: {
     primaryColor: '#9333ea',
@@ -110,7 +112,7 @@ export const useSettingsStore = create<SettingsState>()(
         }))
     }),
     {
-      name: 'settings-storage',
+      name: STORAGE_KEYS.SETTINGS,
     }
   )
 );

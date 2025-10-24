@@ -11,15 +11,79 @@
   }
 }
 
+/* Font Loading with fallback and display swap */
 @font-face {
   font-family: 'Comic';
   src: url('https://fonts.gstatic.com/s/comicsneue/v2/4UaHrEJDsxBrF37olUeD96rp57F2IwM.woff2') format('woff2');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 
 .font-comic {
-  font-family: 'Comic', sans-serif;
+  font-family: 'Comic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
 }
 
-body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff69b4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a10 10 0 1 0 10 10H12V2Z'/%3E%3Cpath d='M12 12 2 22'/%3E%3Cpath d='M12 12 2 2'/%3E%3C/svg%3E"), auto;
+/* Custom cursor for desktop */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff69b4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a10 10 0 1 0 10 10H12V2Z'/%3E%3Cpath d='M12 12 2 22'/%3E%3Cpath d='M12 12 2 2'/%3E%3C/svg%3E"), auto;
+  }
+}
+
+/* Print Styles */
+@media print {
+  /* Hide navigation, decorations, and non-essential elements */
+  nav,
+  .fixed,
+  button,
+  form,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+  
+  /* Optimize for print */
+  body {
+    background: white !important;
+    color: black !important;
+    cursor: default !important;
+  }
+  
+  /* Ensure proper page breaks */
+  article,
+  .space-y-8 > div {
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    color: #6b21a8 !important; /* Purple 800 for print */
+  }
+  
+  /* Optimize links for print */
+  a {
+    text-decoration: underline;
+    color: #6b21a8 !important;
+  }
+  
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  /* Remove shadows and borders that waste ink */
+  .shadow-lg,
+  .shadow,
+  .border-4,
+  .border-2 {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  /* Optimize images */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
 }
