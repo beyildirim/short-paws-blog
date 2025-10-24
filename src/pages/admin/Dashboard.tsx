@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   PenSquare, 
@@ -17,6 +17,8 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { useBlogStore, BlogPost, IconName } from '../../store/blogStore';
 import { useSettingsStore } from '../../store/settingsStore';
+import { hashPassword } from '../../utils/crypto';
+import { ROUTES } from '../../constants';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     logout();
-    navigate('/admin/login');
+    navigate(ROUTES.ADMIN_LOGIN);
   };
 
   const handleEdit = (post: BlogPost) => {
@@ -81,17 +83,19 @@ export default function Dashboard() {
     }
   };
 
-  const handleSaveSettings = () => {
+  const handleSaveSettings = async () => {
     const updatedSettings: any = {
       title: settingsData.title,
       description: settingsData.description,
     };
     
+    // Hash password if provided
     if (settingsData.adminPassword) {
-      updatedSettings.adminPassword = settingsData.adminPassword;
+      updatedSettings.adminPassword = await hashPassword(settingsData.adminPassword);
     }
     
     updateSettings(updatedSettings);
+    setSettingsData({ ...settingsData, adminPassword: '' }); // Clear password field
     alert('Settings updated successfully!');
   };
 
@@ -647,6 +651,9 @@ export default function Dashboard() {
                       className="w-full p-2 border rounded-lg"
                       placeholder="Enter new password"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      🔒 Passwords are automatically hashed (SHA-256) for security
+                    </p>
                   </div>
                   <div className="flex justify-end">
                     <button

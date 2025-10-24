@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Cat paw print favicon -->
+  <rect width="100" height="100" fill="#9333ea" rx="20"/>
+  
+  <!-- Main paw pad -->
+  <ellipse cx="50" cy="60" rx="18" ry="22" fill="#fde047"/>
+  
+  <!-- Top left toe -->
+  <ellipse cx="32" cy="38" rx="8" ry="12" fill="#fde047" transform="rotate(-25 32 38)"/>
+  
+  <!-- Top middle toe -->
+  <ellipse cx="50" cy="32" rx="8" ry="12" fill="#fde047"/>
+  
+  <!-- Top right toe -->
+  <ellipse cx="68" cy="38" rx="8" ry="12" fill="#fde047" transform="rotate(25 68 38)"/>
+  
+  <!-- Bottom accent -->
+  <ellipse cx="50" cy="65" rx="10" ry="14" fill="#ec4899" opacity="0.3"/>
+</svg>

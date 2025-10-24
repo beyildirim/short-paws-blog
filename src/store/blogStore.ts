@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Boxes, Cat, Brain, HeartHandshake } from 'lucide-react';
+import { STORAGE_KEYS } from '../constants';
 export type IconName = 'boxes' | 'cat' | 'brain' | 'heartHandshake';
 export const iconMap: Record<IconName, any> = {
   boxes: Boxes,
@@ -93,7 +94,7 @@ export const useBlogStore = create<BlogState>()(
       })),
     }),
     {
-      name: 'blog-storage',
+      name: STORAGE_KEYS.BLOG,
     }
   )
 );
