@@ -1,5 +1,8 @@
 # 🐱 Short Paws Blog
 
+[![CodeQL](https://github.com/beyildirim/short-paws-blog/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/beyildirim/short-paws-blog/actions/workflows/github-code-scanning/codeql)
+[![Dependabot Updates](https://github.com/beyildirim/short-paws-blog/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/beyildirim/short-paws-blog/actions/workflows/dependabot/dependabot-updates)
+
 A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Specialist extraordinaire! Built with a delightful 90s-inspired aesthetic and modern web technologies.
 
 ## ✨ Features
