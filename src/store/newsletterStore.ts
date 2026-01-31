@@ -8,6 +8,14 @@ export interface Subscriber {
   subscribedAt: string;
 }
 
+const getNewsletterEndpoint = (): string | undefined => {
+  if (typeof import.meta !== 'undefined' && 'env' in import.meta) {
+    const env = import.meta.env as { VITE_NEWSLETTER_ENDPOINT?: string };
+    return env.VITE_NEWSLETTER_ENDPOINT;
+  }
+  return undefined;
+};
+
 interface NewsletterState {
   subscribers: Subscriber[];
   subscribe: (email: string) => Promise<{ success: boolean; message: string }>;
@@ -21,7 +29,7 @@ export const useNewsletterStore = create<NewsletterState>()(
       subscribe: async (email: string) => {
         const normalizedEmail = normalizeEmail(email);
         const { subscribers } = get();
-        const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT as string | undefined;
+        const endpoint = getNewsletterEndpoint();
 
         // Validate email format
         if (!isValidEmail(normalizedEmail)) {
@@ -72,7 +80,7 @@ export const useNewsletterStore = create<NewsletterState>()(
         if (!isValidEmail(normalizedEmail)) {
           return false;
         }
-        const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT as string | undefined;
+        const endpoint = getNewsletterEndpoint();
         if (endpoint) {
           return false;
         }
