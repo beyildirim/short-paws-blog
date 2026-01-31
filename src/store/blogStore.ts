@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Boxes, Cat, Brain, HeartHandshake } from 'lucide-react';
 import { STORAGE_KEYS } from '../constants';
+import { generateId } from '../utils/helpers';
 export type IconName = 'boxes' | 'cat' | 'brain' | 'heartHandshake';
 export const iconMap: Record<IconName, any> = {
   boxes: Boxes,
@@ -74,7 +75,7 @@ export const useBlogStore = create<BlogState>()(
         posts: [
           {
             ...post,
-            id: `${Date.now()}`,
+            id: generateId('post'),
             date: new Date().toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',

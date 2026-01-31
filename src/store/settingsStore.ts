@@ -49,8 +49,8 @@ interface SettingsState {
 const defaultSettings: Settings = {
   title: "Gizmeli Kedi's Personal Website",
   description: "Planning Specialist turning chaos into order, one plan at a time",
-  // SHA-256 hash of 'REDACTED' - users type plain text, system hashes and compares
-  adminPassword: "REDACTED",
+  // Set via admin setup on first login
+  adminPassword: '',
   theme: {
     primaryColor: '#9333ea',
     secondaryColor: '#ec4899',

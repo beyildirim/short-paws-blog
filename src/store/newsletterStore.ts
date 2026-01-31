@@ -1,51 +1,59 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../constants';
+import { hashEmail, isValidEmail, normalizeEmail } from '../utils/crypto';
 
 export interface Subscriber {
-  email: string;
+  emailHash: string;
   subscribedAt: string;
 }
 
 interface NewsletterState {
   subscribers: Subscriber[];
-  subscribe: (email: string) => { success: boolean; message: string };
-  isSubscribed: (email: string) => boolean;
+  subscribe: (email: string) => Promise<{ success: boolean; message: string }>;
+  isSubscribed: (email: string) => Promise<boolean>;
 }
 
 export const useNewsletterStore = create<NewsletterState>()(
   persist(
     (set, get) => ({
       subscribers: [],
-      subscribe: (email: string) => {
-        const { subscribers, isSubscribed } = get();
-        
+      subscribe: async (email: string) => {
+        const normalizedEmail = normalizeEmail(email);
+        const { subscribers } = get();
+
         // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!isValidEmail(normalizedEmail)) {
           return { success: false, message: 'Please enter a valid email address' };
         }
-        
+
+        const emailHash = await hashEmail(normalizedEmail);
+
         // Check if already subscribed
-        if (isSubscribed(email)) {
+        if (subscribers.some((sub) => sub.emailHash === emailHash)) {
           return { success: false, message: 'This email is already subscribed!' };
         }
-        
-        // Add new subscriber
+
+        // Add new subscriber (hashed email only)
         set({
           subscribers: [
             ...subscribers,
             {
-              email,
+              emailHash,
               subscribedAt: new Date().toISOString(),
             },
           ],
         });
-        
+
         return { success: true, message: 'Successfully subscribed! 🎉' };
       },
-      isSubscribed: (email: string) => {
-        return get().subscribers.some(sub => sub.email.toLowerCase() === email.toLowerCase());
+      isSubscribed: async (email: string) => {
+        const normalizedEmail = normalizeEmail(email);
+        if (!isValidEmail(normalizedEmail)) {
+          return false;
+        }
+        const emailHash = await hashEmail(normalizedEmail);
+        return get().subscribers.some((sub) => sub.emailHash === emailHash);
       },
     }),
     {

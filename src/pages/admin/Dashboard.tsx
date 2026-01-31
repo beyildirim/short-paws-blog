@@ -17,7 +17,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { useBlogStore, BlogPost, IconName } from '../../store/blogStore';
 import { useSettingsStore } from '../../store/settingsStore';
-import { hashPassword } from '../../utils/crypto';
+import { hashPassword, validatePassword } from '../../utils/crypto';
 import { ROUTES } from '../../constants';
 
 export default function Dashboard() {
@@ -91,6 +91,11 @@ export default function Dashboard() {
     
     // Hash password if provided
     if (settingsData.adminPassword) {
+      const validation = validatePassword(settingsData.adminPassword);
+      if (!validation.valid) {
+        alert(validation.message || 'Password does not meet requirements.');
+        return;
+      }
       updatedSettings.adminPassword = await hashPassword(settingsData.adminPassword);
     }
     
@@ -652,7 +657,7 @@ export default function Dashboard() {
                       placeholder="Enter new password"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      🔒 Passwords are automatically hashed (SHA-256) for security
+                      🔒 Passwords are automatically hashed (PBKDF2 + salt) for security
                     </p>
                   </div>
                   <div className="flex justify-end">

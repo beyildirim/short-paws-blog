@@ -25,7 +25,7 @@ A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Sp
 - Manage blog posts (create, edit, delete)
 - Customize theme colors and fonts
 - Edit page content dynamically
-- Secure password hashing (SHA-256)
+- Secure password hashing (PBKDF2 + salt)
 - Rate limiting on forms
 
 ### ♿ **Accessibility & Performance**
@@ -84,11 +84,12 @@ npm run preview
 
 ## 🔑 Admin Access
 
-**Default Credentials:**
+On first visit to `/admin/login`, you’ll be prompted to set an admin password.
+After setup:
 - Username: `admin`
-- Password: `REDACTED`
+- Password: the one you set
 
-> ⚠️ **Important:** Change the admin password immediately after first login via the Settings tab in the admin dashboard!
+> ⚠️ **Note:** Admin authentication is client-side for this demo. For production use, move auth and data storage to a backend.
 
 ## 📁 Project Structure
 

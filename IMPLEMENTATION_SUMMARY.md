@@ -33,7 +33,7 @@ Your Short Paws Blog has been comprehensively upgraded with all recommended impr
 - ✅ Centralized constants file
 
 ### 3. **Security Upgrades** 🔐
-- ✅ **Password hashing (SHA-256)** - No more plain text!
+- ✅ **Password hashing (PBKDF2 + salt)** - No more plain text!
 - ✅ Rate limiting on login (3 attempts/5 min)
 - ✅ Rate limiting on forms (5 attempts/min)
 - ✅ Input validation everywhere
@@ -70,12 +70,12 @@ As requested, your wife's preferred colors remain intact:
 
 **⚠️ CRITICAL SECURITY UPDATE**
 
-The admin password is now **hashed for security**. 
+Admin access now requires a one-time setup to create a password, and passwords are stored as **PBKDF2 + salt** hashes.
 
 **To access admin:**
 1. Go to `/admin/login`
-2. Username: `admin`
-3. Password: `REDACTED` (same as before, but now hashed in storage)
+2. Set a new password on first visit
+3. Username is `admin` thereafter
 
 **To change password:**
 1. Login to admin dashboard

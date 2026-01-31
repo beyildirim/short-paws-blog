@@ -27,7 +27,7 @@
 - ✅ Loading states on all forms and buttons
 
 #### 🔐 **Security Enhancements**
-- ✅ Password hashing using SHA-256 (previously plain text!)
+- ✅ Password hashing using PBKDF2 + salt (previously plain text!)
 - ✅ Rate limiting on login (3 attempts per 5 minutes)
 - ✅ Rate limiting on contact form (5 attempts per minute)
 - ✅ Input validation on all forms
@@ -114,12 +114,10 @@ src/
 
 ### 🔄 Breaking Changes
 
-⚠️ **IMPORTANT**: Admin password now hashed!
+⚠️ **IMPORTANT**: Admin password setup changed.
 
-**Old Default**: `REDACTED` (plain text)
-**New Default**: `REDACTED` (SHA-256 hash of `REDACTED`)
-
-If you had a custom password stored, you'll need to reset it via the admin dashboard Settings tab.
+- Default admin password removed. Set one on first login.
+- Password hashing upgraded to PBKDF2 + salt. Legacy hashes are upgraded on the next successful login.
 
 ### 📊 Statistics
 

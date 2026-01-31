@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../constants';
+import { isValidEmail } from '../utils/crypto';
+import { generateId } from '../utils/helpers';
 
 export interface Comment {
   id: string;
   postId: string;
   author: string;
-  email: string;
   content: string;
   createdAt: string;
 }
@@ -28,8 +29,7 @@ export const useCommentStore = create<CommentState>()(
           return { success: false, message: 'All fields are required' };
         }
         
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!isValidEmail(email)) {
           return { success: false, message: 'Please enter a valid email address' };
         }
         
@@ -43,10 +43,9 @@ export const useCommentStore = create<CommentState>()(
         
         // Add new comment
         const newComment: Comment = {
-          id: `comment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: generateId('comment'),
           postId,
           author: author.trim(),
-          email: email.trim(),
           content: content.trim(),
           createdAt: new Date().toISOString(),
         };

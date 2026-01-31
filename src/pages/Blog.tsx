@@ -30,9 +30,9 @@ function Blog() {
     );
   }, [posts, searchQuery]);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = subscribe(email);
+    const result = await subscribe(email);
     setSubscribeStatus({ message: result.message, isError: !result.success });
     
     if (result.success) {
