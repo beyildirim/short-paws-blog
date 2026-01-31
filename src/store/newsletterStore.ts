@@ -58,6 +58,17 @@ export const useNewsletterStore = create<NewsletterState>()(
     }),
     {
       name: STORAGE_KEYS.NEWSLETTER,
+      version: 1,
+      migrate: (state: any) => {
+        if (!state?.subscribers) return state;
+        const allHashed = state.subscribers.every(
+          (sub: any) => typeof sub.emailHash === 'string' && sub.emailHash.length > 0
+        );
+        if (!allHashed) {
+          return { ...state, subscribers: [] };
+        }
+        return state;
+      },
     }
   )
 );

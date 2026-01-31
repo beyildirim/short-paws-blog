@@ -69,6 +69,12 @@ export const useCommentStore = create<CommentState>()(
     }),
     {
       name: STORAGE_KEYS.COMMENTS,
+      version: 1,
+      migrate: (state: any) => {
+        if (!state?.comments) return state;
+        const sanitized = state.comments.map(({ email: _email, ...rest }: any) => rest);
+        return { ...state, comments: sanitized };
+      },
     }
   )
 );
