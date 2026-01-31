@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Boxes, Cat, Brain, HeartHandshake } from 'lucide-react';
+import { Boxes, Cat, Brain, HeartHandshake, type LucideIcon } from 'lucide-react';
 import { STORAGE_KEYS } from '../constants';
 import { estimateReadTime, generateId, slugify } from '../utils/helpers';
 import type { Post, PostStatus } from '../types/post';
 
 export type IconName = 'boxes' | 'cat' | 'brain' | 'heartHandshake';
-export const iconMap: Record<IconName, any> = {
+export const iconMap: Record<IconName, LucideIcon> = {
   boxes: Boxes,
   cat: Cat,
   brain: Brain,
@@ -63,9 +63,11 @@ export const useBlogStore = create<BlogState>()(
     {
       name: STORAGE_KEYS.BLOG,
       version: 1,
-      migrate: (state: any) => {
-        if (!state?.posts) return state;
-        const migrated = state.posts.map((post: BlogPost) => ({
+      migrate: (state: unknown) => {
+        if (!state || typeof state !== 'object') return state;
+        const typedState = state as { posts?: BlogPost[] } & Record<string, unknown>;
+        if (!Array.isArray(typedState.posts)) return state;
+        const migrated = typedState.posts.map((post) => ({
           ...post,
           tags: post.tags || [],
           status: post.status || 'published',
@@ -73,7 +75,7 @@ export const useBlogStore = create<BlogState>()(
           source: post.source || 'local',
           readTime: post.readTime || estimateReadTime(post.content || ''),
         }));
-        return { ...state, posts: migrated };
+        return { ...typedState, posts: migrated };
       },
     }
   )

@@ -1,39 +1,29 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import '@testing-library/jest-dom';
 import Blog from '../pages/Blog';
-import { useBlogStore } from '../store/blogStore';
+import { useBlogStore, type BlogPost } from '../store/blogStore';
 
-// Import the global type declarations
-import '../types/global';
-
-// Mock the blog store
-jest.mock('../store/blogStore');
-
-const mockPosts = [
+const mockPosts: BlogPost[] = [
   {
     id: 'test-post-1',
     title: 'Test Post 1',
-    date: '2024-01-01',
-    readTime: '5 min read',
     excerpt: 'This is a test post',
+    readTime: '5 min read',
     content: 'Test content',
+    publishedAt: '2024-01-01T00:00:00.000Z',
+    status: 'published',
+    tags: ['test'],
     icon: 'cat',
+    source: 'local',
   },
 ];
 
 describe('Blog Component', () => {
 
   beforeEach(() => {
-    // Setup mock return values
-    (useBlogStore as unknown as jest.Mock).mockImplementation(() => ({
-      posts: mockPosts,
-      addPost: jest.fn(),
-      editPost: jest.fn(),
-      deletePost: jest.fn(),
-    }));
+    useBlogStore.setState({ posts: mockPosts });
   });
 
   it('renders blog posts', () => {
@@ -61,12 +51,7 @@ describe('Blog Component', () => {
 
   it('displays empty state when no posts', () => {
     // Override the mock to return no posts
-    (useBlogStore as unknown as jest.Mock).mockImplementation(() => ({
-      posts: [],
-      addPost: jest.fn(),
-      editPost: jest.fn(),
-      deletePost: jest.fn(),
-    }));
+    useBlogStore.setState({ posts: [] });
 
     render(
       <Router>

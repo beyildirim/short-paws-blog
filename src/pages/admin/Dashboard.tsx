@@ -44,6 +44,9 @@ export default function Dashboard() {
     title: settings.title,
     description: settings.description,
     adminPassword: '',
+    seo: { ...settings.seo },
+    social: { ...settings.social },
+    author: { ...settings.author },
   });
   const [themeData, setThemeData] = useState(settings.theme);
   const [pageContent, setPageContent] = useState(settings.content);
@@ -112,9 +115,12 @@ export default function Dashboard() {
   };
 
   const handleSaveSettings = async () => {
-    const updatedSettings: any = {
+    const updatedSettings: Partial<typeof settings> = {
       title: settingsData.title,
       description: settingsData.description,
+      seo: settingsData.seo,
+      social: settingsData.social,
+      author: settingsData.author,
     };
     
     // Hash password if provided
@@ -701,30 +707,188 @@ export default function Dashboard() {
             {activeTab === 'settings' && (
               <div>
                 <h2 className="text-2xl font-bold text-purple-600 mb-6">Website Settings</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Website Title
-                    </label>
-                    <input
-                      type="text"
-                      value={settingsData.title}
-                      onChange={(e) => setSettingsData({ ...settingsData, title: e.target.value })}
-                      className="w-full p-2 border rounded-lg"
-                    />
+                <div className="space-y-6">
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-4">
+                    <h3 className="text-lg font-bold text-purple-600">Site Basics</h3>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Website Title
+                      </label>
+                      <input
+                        type="text"
+                        value={settingsData.title}
+                        onChange={(e) => setSettingsData({ ...settingsData, title: e.target.value })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Website Description
+                      </label>
+                      <textarea
+                        value={settingsData.description}
+                        onChange={(e) => setSettingsData({ ...settingsData, description: e.target.value })}
+                        className="w-full p-2 border rounded-lg"
+                        rows={3}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Website Description
-                    </label>
+
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-4">
+                    <h3 className="text-lg font-bold text-purple-600">SEO & Metadata</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Site URL
+                        </label>
+                        <input
+                          type="url"
+                          value={settingsData.seo.siteUrl}
+                          onChange={(e) =>
+                            setSettingsData({
+                              ...settingsData,
+                              seo: { ...settingsData.seo, siteUrl: e.target.value },
+                            })
+                          }
+                          className="w-full p-2 border rounded-lg"
+                          placeholder="https://yourdomain.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Default OG Image URL
+                        </label>
+                        <input
+                          type="url"
+                          value={settingsData.seo.defaultOgImage}
+                          onChange={(e) =>
+                            setSettingsData({
+                              ...settingsData,
+                              seo: { ...settingsData.seo, defaultOgImage: e.target.value },
+                            })
+                          }
+                          className="w-full p-2 border rounded-lg"
+                          placeholder="https://..."
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Twitter Handle
+                      </label>
+                      <input
+                        type="text"
+                        value={settingsData.seo.twitterHandle}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            seo: { ...settingsData.seo, twitterHandle: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="@yourhandle"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-4">
+                    <h3 className="text-lg font-bold text-purple-600">Social Links</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="url"
+                        value={settingsData.social.twitter}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            social: { ...settingsData.social, twitter: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="Twitter URL"
+                      />
+                      <input
+                        type="url"
+                        value={settingsData.social.linkedin}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            social: { ...settingsData.social, linkedin: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="LinkedIn URL"
+                      />
+                      <input
+                        type="url"
+                        value={settingsData.social.github}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            social: { ...settingsData.social, github: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="GitHub URL"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-4">
+                    <h3 className="text-lg font-bold text-purple-600">Author Profile</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        value={settingsData.author.name}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            author: { ...settingsData.author, name: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="Author name"
+                      />
+                      <input
+                        type="text"
+                        value={settingsData.author.role}
+                        onChange={(e) =>
+                          setSettingsData({
+                            ...settingsData,
+                            author: { ...settingsData.author, role: e.target.value },
+                          })
+                        }
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="Role / Title"
+                      />
+                    </div>
                     <textarea
-                      value={settingsData.description}
-                      onChange={(e) => setSettingsData({ ...settingsData, description: e.target.value })}
+                      value={settingsData.author.bio}
+                      onChange={(e) =>
+                        setSettingsData({
+                          ...settingsData,
+                          author: { ...settingsData.author, bio: e.target.value },
+                        })
+                      }
                       className="w-full p-2 border rounded-lg"
                       rows={3}
+                      placeholder="Short bio"
+                    />
+                    <input
+                      type="url"
+                      value={settingsData.author.avatar}
+                      onChange={(e) =>
+                        setSettingsData({
+                          ...settingsData,
+                          author: { ...settingsData.author, avatar: e.target.value },
+                        })
+                      }
+                      className="w-full p-2 border rounded-lg"
+                      placeholder="Avatar image URL"
                     />
                   </div>
-                  <div>
+
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-2">
+                    <h3 className="text-lg font-bold text-purple-600">Admin Security</h3>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       New Admin Password (leave blank to keep current)
                     </label>
@@ -739,6 +903,7 @@ export default function Dashboard() {
                       🔒 Passwords are automatically hashed (PBKDF2 + salt) for security
                     </p>
                   </div>
+
                   <div className="flex justify-end">
                     <button
                       onClick={handleSaveSettings}

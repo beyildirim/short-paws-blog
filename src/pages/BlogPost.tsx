@@ -81,11 +81,18 @@ function BlogPost() {
   }
 
   const IconComponent = iconMap[post.icon];
-  const canonicalUrl = getCurrentUrl();
-  const ogImage = post.coverImage || settings.content.home.profileImage;
-  const authorName = post.author || 'Gizmeli Kedi';
-  const authorRole = settings.content.home.jobTitle;
-  const authorBio = settings.content.home.bio;
+  const canonicalUrl = (() => {
+    if (settings.seo.siteUrl && typeof window !== 'undefined') {
+      return new URL(window.location.pathname + window.location.search, settings.seo.siteUrl).toString();
+    }
+    return getCurrentUrl();
+  })();
+  const defaultOgImage = settings.seo.defaultOgImage || settings.author.avatar || settings.content.home.profileImage;
+  const ogImage = post.coverImage || defaultOgImage;
+  const authorName = post.author || settings.author.name || 'Gizmeli Kedi';
+  const authorRole = settings.author.role || settings.content.home.jobTitle;
+  const authorBio = settings.author.bio || settings.content.home.bio;
+  const authorAvatar = settings.author.avatar || settings.content.home.profileImage;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -118,6 +125,7 @@ function BlogPost() {
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
         {ogImage && <meta name="twitter:image" content={ogImage} />}
+        {settings.seo.twitterHandle && <meta name="twitter:site" content={settings.seo.twitterHandle} />}
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
@@ -187,7 +195,7 @@ function BlogPost() {
           name={authorName}
           role={authorRole}
           bio={authorBio}
-          image={settings.content.home.profileImage}
+          image={authorAvatar}
           email={settings.content.contact.email}
         />
 

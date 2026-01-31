@@ -16,7 +16,13 @@ interface Frontmatter {
   author?: string;
 }
 
-const modules = import.meta.glob('./*.md', { eager: true, query: '?raw', import: 'default' });
+type GlobLoader = (
+  pattern: string,
+  options: { eager: true; query: string; import: 'default' }
+) => Record<string, string>;
+
+const glob = (import.meta as ImportMeta & { glob?: GlobLoader }).glob;
+const modules = glob ? glob('./*.md', { eager: true, query: '?raw', import: 'default' }) : {};
 
 const parseFrontmatter = (raw: string): { data: Frontmatter; content: string } => {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);

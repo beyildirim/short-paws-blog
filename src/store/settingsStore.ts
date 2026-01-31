@@ -31,11 +31,33 @@ interface PageContent {
   };
 }
 
+interface SeoSettings {
+  siteUrl: string;
+  defaultOgImage: string;
+  twitterHandle: string;
+}
+
+interface SocialLinks {
+  twitter: string;
+  linkedin: string;
+  github: string;
+}
+
+interface AuthorProfile {
+  name: string;
+  role: string;
+  bio: string;
+  avatar: string;
+}
+
 interface Settings {
   title: string;
   description: string;
   adminPassword: string;
   theme: ThemeSettings;
+  seo: SeoSettings;
+  social: SocialLinks;
+  author: AuthorProfile;
   content: PageContent;
 }
 
@@ -57,6 +79,22 @@ const defaultSettings: Settings = {
     accentColor: '#fde047',
     fontFamily: 'Comic',
     borderStyle: 'border-4'
+  },
+  seo: {
+    siteUrl: '',
+    defaultOgImage: '',
+    twitterHandle: '',
+  },
+  social: {
+    twitter: '',
+    linkedin: '',
+    github: '',
+  },
+  author: {
+    name: "Gizmeli Kedi",
+    role: "Planning Specialist",
+    bio: "Turning chaos into order, one plan at a time",
+    avatar: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400&h=400&fit=crop",
   },
   content: {
     home: {
@@ -113,6 +151,23 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: STORAGE_KEYS.SETTINGS,
+      version: 1,
+      migrate: (state: unknown) => {
+        if (!state || typeof state !== 'object') return state;
+        const typedState = state as { settings?: Partial<Settings> } & Record<string, unknown>;
+        if (!typedState.settings) return state;
+        const persistedSettings = typedState.settings;
+        return {
+          ...typedState,
+          settings: {
+            ...defaultSettings,
+            ...persistedSettings,
+            seo: { ...defaultSettings.seo, ...(persistedSettings.seo ?? {}) },
+            social: { ...defaultSettings.social, ...(persistedSettings.social ?? {}) },
+            author: { ...defaultSettings.author, ...(persistedSettings.author ?? {}) },
+          },
+        };
+      },
     }
   )
 );

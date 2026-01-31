@@ -70,10 +70,17 @@ export const useCommentStore = create<CommentState>()(
     {
       name: STORAGE_KEYS.COMMENTS,
       version: 1,
-      migrate: (state: any) => {
-        if (!state?.comments) return state;
-        const sanitized = state.comments.map(({ email: _email, ...rest }: any) => rest);
-        return { ...state, comments: sanitized };
+      migrate: (state: unknown) => {
+        if (!state || typeof state !== 'object') return state;
+        const typedState = state as { comments?: Comment[] } & Record<string, unknown>;
+        if (!Array.isArray(typedState.comments)) return state;
+        const sanitized = typedState.comments.map((comment) => {
+          if (!comment || typeof comment !== 'object') return comment;
+          const cleaned: Comment & { email?: string } = { ...(comment as Comment & { email?: string }) };
+          delete cleaned.email;
+          return cleaned;
+        });
+        return { ...typedState, comments: sanitized };
       },
     }
   )

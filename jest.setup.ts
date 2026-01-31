@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { jest } from '@jest/globals';
 import { TextEncoder, TextDecoder } from 'util';
 
 // Mock window.matchMedia
@@ -25,11 +26,14 @@ class ResizeObserverStub {
 window.ResizeObserver = ResizeObserverStub;
 
 // Mock scrollIntoView
-element.scrollIntoView = jest.fn();
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  value: jest.fn(),
+  writable: true,
+});
 
 // Add TextEncoder and TextDecoder for JSDOM
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder as any;
+globalThis.TextEncoder = TextEncoder;
+globalThis.TextDecoder = TextDecoder;
 
 // Mock localStorage
 const localStorageMock = (() => {
