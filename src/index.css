@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:focus-visible {
+  outline: 3px solid #9333ea;
+  outline-offset: 2px;
+}
+
 @keyframes marquee {
   0% {
     transform: translateX(100%);

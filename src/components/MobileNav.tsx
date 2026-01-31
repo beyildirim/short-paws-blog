@@ -6,6 +6,7 @@ import { ROUTES } from '../constants';
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const adminEnabled = import.meta.env.VITE_ENABLE_ADMIN === 'true' || import.meta.env.DEV;
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -15,8 +16,10 @@ export function MobileNav() {
     { to: ROUTES.ABOUT, icon: Stars, label: 'About' },
     { to: ROUTES.BLOG, icon: BookOpen, label: 'Blog' },
     { to: ROUTES.CONTACT, icon: Sparkles, label: 'Contact' },
-    { to: ROUTES.ADMIN_LOGIN, icon: Lock, label: 'Admin' },
   ];
+  if (adminEnabled) {
+    navItems.push({ to: ROUTES.ADMIN_LOGIN, icon: Lock, label: 'Admin' });
+  }
 
   const isActive = (path: string) => location.pathname === path;
 

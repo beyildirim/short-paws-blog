@@ -18,6 +18,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useBlogStore, BlogPost, IconName } from '../../store/blogStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { hashPassword, validatePassword } from '../../utils/crypto';
+import { formatDate } from '../../utils/helpers';
 import { ROUTES } from '../../constants';
 
 export default function Dashboard() {
@@ -31,10 +32,13 @@ export default function Dashboard() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    readTime: '',
     excerpt: '',
     content: '',
     icon: 'cat' as IconName,
+    tags: '',
+    status: 'published',
+    publishedAt: '',
+    coverImage: '',
   });
   const [settingsData, setSettingsData] = useState({
     title: settings.title,
@@ -53,27 +57,51 @@ export default function Dashboard() {
     setEditing(post.id);
     setFormData({
       title: post.title,
-      readTime: post.readTime,
       excerpt: post.excerpt,
       content: post.content,
       icon: post.icon,
+      tags: post.tags?.join(', ') ?? '',
+      status: post.status,
+      publishedAt: post.publishedAt ? post.publishedAt.slice(0, 10) : '',
+      coverImage: post.coverImage ?? '',
     });
   };
 
   const handleSave = () => {
+    const tags = formData.tags
+      .split(',')
+      .map((tag) => tag.trim().toLowerCase())
+      .filter(Boolean);
+    const publishedAt = formData.publishedAt
+      ? new Date(formData.publishedAt).toISOString()
+      : new Date().toISOString();
+    const payload: Omit<BlogPost, 'id' | 'source'> = {
+      title: formData.title,
+      excerpt: formData.excerpt,
+      content: formData.content,
+      icon: formData.icon,
+      tags,
+      status: formData.status as BlogPost['status'],
+      publishedAt,
+      coverImage: formData.coverImage || undefined,
+    };
+
     if (editing) {
-      editPost(editing, formData);
+      editPost(editing, payload);
       setEditing(null);
     } else if (showAddForm) {
-      addPost(formData);
+      addPost(payload);
       setShowAddForm(false);
     }
     setFormData({
       title: '',
-      readTime: '',
       excerpt: '',
       content: '',
       icon: 'cat',
+      tags: '',
+      status: 'published',
+      publishedAt: '',
+      coverImage: '',
     });
   };
 
@@ -195,9 +223,33 @@ export default function Dashboard() {
                       />
                       <input
                         type="text"
-                        placeholder="Read Time (e.g., 5 min read)"
-                        value={formData.readTime}
-                        onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                        placeholder="Tags (comma-separated)"
+                        value={formData.tags}
+                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select
+                          value={formData.status}
+                          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                          className="w-full p-2 border rounded-lg"
+                        >
+                          <option value="published">Published</option>
+                          <option value="draft">Draft</option>
+                          <option value="scheduled">Scheduled</option>
+                        </select>
+                        <input
+                          type="date"
+                          value={formData.publishedAt}
+                          onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
+                          className="w-full p-2 border rounded-lg"
+                        />
+                      </div>
+                      <input
+                        type="url"
+                        placeholder="Cover image URL (optional)"
+                        value={formData.coverImage}
+                        onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
                         className="w-full p-2 border rounded-lg"
                       />
                       <textarea
@@ -246,9 +298,34 @@ export default function Dashboard() {
                           />
                           <input
                             type="text"
-                            value={formData.readTime}
-                            onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                            value={formData.tags}
+                            onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                             className="w-full p-2 border rounded-lg"
+                            placeholder="Tags (comma-separated)"
+                          />
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <select
+                              value={formData.status}
+                              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                              className="w-full p-2 border rounded-lg"
+                            >
+                              <option value="published">Published</option>
+                              <option value="draft">Draft</option>
+                              <option value="scheduled">Scheduled</option>
+                            </select>
+                            <input
+                              type="date"
+                              value={formData.publishedAt}
+                              onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
+                              className="w-full p-2 border rounded-lg"
+                            />
+                          </div>
+                          <input
+                            type="url"
+                            value={formData.coverImage}
+                            onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+                            className="w-full p-2 border rounded-lg"
+                            placeholder="Cover image URL (optional)"
                           />
                           <textarea
                             value={formData.excerpt}
@@ -283,7 +360,9 @@ export default function Dashboard() {
                           <div className="flex justify-between items-start">
                             <div>
                               <h3 className="text-xl font-bold text-purple-600">{post.title}</h3>
-                              <p className="text-gray-600 text-sm">{post.date} • {post.readTime}</p>
+                              <p className="text-gray-600 text-sm">
+                                {formatDate(post.publishedAt)} • {post.readTime} • {post.status}
+                              </p>
                             </div>
                             <div className="flex gap-2">
                               <button

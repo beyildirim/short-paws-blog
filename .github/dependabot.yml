@@ -9,6 +9,11 @@ updates:
     rebase-strategy: "auto"
     allow:
       - dependency-type: "all"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

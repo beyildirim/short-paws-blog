@@ -52,6 +52,7 @@ export function slugify(text: string): string {
  * Get current page URL for sharing
  */
 export function getCurrentUrl(): string {
+  if (typeof window === 'undefined') return '';
   return window.location.href;
 }
 
@@ -102,4 +103,18 @@ export function generateId(prefix?: string): string {
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
   return prefix ? `${prefix}-${base}` : base;
+}
+
+/**
+ * Estimate reading time from text content
+ */
+export function estimateReadTime(text: string, wordsPerMinute: number = 200): string {
+  const stripped = text
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/[#_*`>\\-]/g, ' ')
+    .replace(/\\s+/g, ' ')
+    .trim();
+  const wordCount = stripped ? stripped.split(' ').length : 0;
+  const minutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  return `${minutes} min read`;
 }

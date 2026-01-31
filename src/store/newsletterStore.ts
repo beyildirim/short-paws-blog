@@ -21,10 +21,30 @@ export const useNewsletterStore = create<NewsletterState>()(
       subscribe: async (email: string) => {
         const normalizedEmail = normalizeEmail(email);
         const { subscribers } = get();
+        const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT as string | undefined;
 
         // Validate email format
         if (!isValidEmail(normalizedEmail)) {
           return { success: false, message: 'Please enter a valid email address' };
+        }
+
+        if (endpoint) {
+          try {
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: normalizedEmail }),
+            });
+
+            if (!response.ok) {
+              return { success: false, message: 'Subscription failed. Please try again.' };
+            }
+
+            return { success: true, message: 'Successfully subscribed! 🎉' };
+          } catch (error) {
+            console.error('Newsletter subscription error:', error);
+            return { success: false, message: 'Subscription failed. Please try again.' };
+          }
         }
 
         const emailHash = await hashEmail(normalizedEmail);
@@ -50,6 +70,10 @@ export const useNewsletterStore = create<NewsletterState>()(
       isSubscribed: async (email: string) => {
         const normalizedEmail = normalizeEmail(email);
         if (!isValidEmail(normalizedEmail)) {
+          return false;
+        }
+        const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT as string | undefined;
+        if (endpoint) {
           return false;
         }
         const emailHash = await hashEmail(normalizedEmail);

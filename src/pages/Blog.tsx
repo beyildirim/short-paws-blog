@@ -2,20 +2,28 @@ import { useState, useMemo } from 'react';
 import { Calendar, Clock, ChevronRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useBlogStore, iconMap } from '../store/blogStore';
+import { iconMap } from '../store/blogStore';
 import { useNewsletterStore } from '../store/newsletterStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { BlogSearch } from '../components/BlogSearch';
+import { TagFilter } from '../components/TagFilter';
+import { usePosts } from '../hooks/usePosts';
 import { formatDate } from '../utils/helpers';
 
 
 function Blog() {
-  const { posts } = useBlogStore();
+  const posts = usePosts();
   const { subscribe } = useNewsletterStore();
   const { settings } = useSettingsStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [subscribeStatus, setSubscribeStatus] = useState<{ message: string; isError: boolean } | null>(null);
+
+  const tags = useMemo(
+    () => Array.from(new Set(posts.flatMap((post) => post.tags))).sort(),
+    [posts]
+  );
 
   // Filter posts based on search query
   const filteredPosts = useMemo(() => {
@@ -26,9 +34,15 @@ function Blog() {
       (post) =>
         post.title.toLowerCase().includes(query) ||
         post.excerpt.toLowerCase().includes(query) ||
-        post.content.toLowerCase().includes(query)
+        post.content.toLowerCase().includes(query) ||
+        post.tags.some((tag) => tag.toLowerCase().includes(query))
     );
   }, [posts, searchQuery]);
+
+  const visiblePosts = useMemo(() => {
+    if (!activeTag) return filteredPosts;
+    return filteredPosts.filter((post) => post.tags.includes(activeTag));
+  }, [filteredPosts, activeTag]);
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,11 +71,12 @@ function Blog() {
           Gizmeli Kedi's Blog
         </h2>
         
-        <div className="mb-6">
+        <div className="mb-6 space-y-4">
           <BlogSearch onSearch={setSearchQuery} />
+          <TagFilter tags={tags} activeTag={activeTag} onChange={setActiveTag} />
         </div>
 
-        {filteredPosts.length === 0 ? (
+        {visiblePosts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg mb-2">No posts found 😿</p>
             <p className="text-gray-500">Try a different search term</p>
@@ -69,16 +84,27 @@ function Blog() {
         ) : (
           <>
             <p className="text-sm text-gray-600 mb-4">
-              Showing {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
+              Showing {visiblePosts.length} {visiblePosts.length === 1 ? 'post' : 'posts'}
             </p>
             <div className="grid gap-6">
-              {filteredPosts.map((post) => {
+              {visiblePosts.map((post) => {
                 const IconComponent = iconMap[post.icon];
                 return (
               <article 
                 key={post.id}
                 className="bg-pink-50 rounded-lg p-6 transition-transform duration-300 hover:transform hover:scale-[1.02] border-2 border-purple-200"
               >
+                {post.coverImage && (
+                  <div className="mb-4 overflow-hidden rounded-lg border-2 border-purple-200">
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-full h-48 object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                )}
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 bg-white p-3 rounded-full shadow-md">
                     <IconComponent className="text-purple-500" size={24} />
@@ -90,7 +116,7 @@ function Blog() {
                     <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                       <span className="flex items-center gap-1">
                         <Calendar size={16} aria-hidden="true" />
-                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                        <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock size={16} aria-hidden="true" />
@@ -100,6 +126,15 @@ function Blog() {
                     <p className="text-gray-700 mb-4">
                       {post.excerpt}
                     </p>
+                    {post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.map((tag) => (
+                          <span key={tag} className="text-xs px-2 py-1 bg-white border border-purple-200 rounded-full text-purple-700">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <Link
                       to={`/blog/${post.id}`}
                       className="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium hover:underline"

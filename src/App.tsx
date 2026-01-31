@@ -5,8 +5,9 @@ import { Helmet } from 'react-helmet-async';
 import { useSettingsStore } from './store/settingsStore';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { MobileNav } from './components/MobileNav';
-import { LoadingSpinner } from './components/LoadingSpinner';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PageSkeleton } from './components/PageSkeleton';
+import { Analytics } from './components/Analytics';
 import { ROUTES, ICON_SIZE, ANIMATION_DURATION } from './constants';
 
 // Lazy load pages for better performance
@@ -21,6 +22,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   const { settings } = useSettingsStore();
+  const adminEnabled = import.meta.env.VITE_ENABLE_ADMIN === 'true' || import.meta.env.DEV;
 
   // Convert hex colors to RGB for CSS variables
   const hexToRgb = (hex: string) => {
@@ -39,6 +41,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
+        <Analytics />
         <Helmet>
           <title>{settings.title}</title>
           <meta name="description" content={settings.description} />
@@ -54,7 +57,19 @@ function App() {
           </style>
         </Helmet>
         
-        <Suspense fallback={<LoadingSpinner fullScreen message="Loading page..." />}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-white focus:text-purple-700 focus:px-4 focus:py-2 focus:rounded focus:shadow"
+        >
+          Skip to content
+        </a>
+        <Suspense
+          fallback={
+            <div className="max-w-4xl mx-auto">
+              <PageSkeleton />
+            </div>
+          }
+        >
           <Routes>
         <Route
           path="/*"
@@ -96,15 +111,17 @@ function App() {
                     <Sparkles className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
                     <span>Contact</span>
                   </Link>
-                  <Link to={ROUTES.ADMIN_LOGIN} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
-                    <Lock className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
-                    <span>Admin</span>
-                  </Link>
+                  {adminEnabled && (
+                    <Link to={ROUTES.ADMIN_LOGIN} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
+                      <Lock className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
                 </div>
               </nav>
 
               {/* Main content */}
-              <div className="max-w-4xl mx-auto">
+              <main id="main-content" className="max-w-4xl mx-auto">
                 <Routes>
                   <Route path={ROUTES.HOME} element={<Home />} />
                   <Route path={ROUTES.ABOUT} element={<About />} />
@@ -113,21 +130,30 @@ function App() {
                   <Route path={ROUTES.BLOG_POST} element={<BlogPost />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-              </div>
+              </main>
             </div>
           }
         />
-        <Route path={ROUTES.ADMIN_LOGIN} element={<Login />} />
-        <Route
-          path={ROUTES.ADMIN}
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        {adminEnabled ? (
+          <>
+            <Route path={ROUTES.ADMIN_LOGIN} element={<Login />} />
+            <Route
+              path={ROUTES.ADMIN}
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </>
+        ) : (
+          <>
+            <Route path={ROUTES.ADMIN_LOGIN} element={<NotFound />} />
+            <Route path={ROUTES.ADMIN} element={<NotFound />} />
+          </>
+        )}
         <Route path="*" element={<NotFound />} />
-      </Routes>
+          </Routes>
         </Suspense>
       </Router>
     </ErrorBoundary>

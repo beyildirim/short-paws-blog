@@ -18,9 +18,12 @@ A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Sp
 ### 📝 **Blog Functionality**
 - Full blog with individual post pages
 - Search and filter blog posts
+- Tag-based filtering and related posts
 - Social sharing buttons (Twitter, LinkedIn, Facebook, Copy Link)
 - Comment system with validation
 - Newsletter subscription
+- Markdown-based posts in `src/content/posts`
+- Reading progress indicator and prev/next navigation
 - SEO-optimized with meta tags and Open Graph support
 
 ### 🔐 **Admin Dashboard**
@@ -39,6 +42,7 @@ A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Sp
 - Loading states and skeletons
 - Breadcrumb navigation
 - Custom 404 page
+- JSON-LD structured data for SEO
 
 ## 🛠️ Tech Stack
 
@@ -93,6 +97,7 @@ After setup:
 - Password: the one you set
 
 > ⚠️ **Note:** Admin authentication is client-side for this demo. For production use, move auth and data storage to a backend.
+> Admin routes are hidden in production unless `VITE_ENABLE_ADMIN=true` is set.
 
 ## 📁 Project Structure
 
@@ -131,6 +136,46 @@ src/
 ```
 
 ## 🎨 Customization
+
+### Content Authoring (Markdown)
+Blog posts live in `src/content/posts/*.md` with frontmatter. Example:
+
+```md
+---
+title: "My Post"
+slug: "my-post"
+excerpt: "Short summary..."
+date: "2024-03-15"
+status: "published" # draft | scheduled | published
+tags: ["strategy", "planning"]
+coverImage: "https://..."
+---
+Your markdown content here...
+```
+
+Run content linting:
+
+```bash
+npm run lint:content
+```
+
+### Environment Variables
+
+Create a `.env` file (optional):
+
+```
+VITE_ENABLE_ADMIN=true
+VITE_PLAUSIBLE_DOMAIN=yourdomain.com
+VITE_PLAUSIBLE_SRC=https://plausible.io/js/script.js
+VITE_NEWSLETTER_ENDPOINT=https://your-newsletter-provider/subscribe
+```
+
+### Security Headers (Recommended)
+If you control deployment headers, consider a basic CSP:
+
+```
+Content-Security-Policy: default-src 'self'; img-src 'self' https: data:; script-src 'self' https://plausible.io; style-src 'self' 'unsafe-inline'; font-src 'self' https: data:
+```
 
 ### Theme Colors
 Navigate to **Admin → Theme** to customize:

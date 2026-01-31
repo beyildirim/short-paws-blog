@@ -37,7 +37,7 @@ export function SocialShare({ title, description, url }: SocialShareProps) {
         break;
     }
     
-    window.open(shareLink, '_blank', 'width=600,height=400');
+    window.open(shareLink, '_blank', 'noopener,noreferrer,width=600,height=400');
   };
 
   return (

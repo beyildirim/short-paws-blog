@@ -1,6 +1,7 @@
 import { Cat, Stars, Sparkles, Heart, Flower, Flower2, Briefcase } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useSettingsStore } from '../store/settingsStore';
+import { ResponsiveImage } from '../components/ResponsiveImage';
 import { ICON_SIZE, ANIMATION_DURATION } from '../constants';
 
 function Home() {
@@ -43,10 +44,11 @@ function Home() {
           <Flower2 className="w-12 h-12 text-[rgb(var(--color-primary))]" />
         </div>
         <div className="flex items-center justify-center mb-4">
-          <img
+          <ResponsiveImage
             src={settings.content.home.profileImage}
             alt="Profile"
-            className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))]`}
+            className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover`}
+            loading="eager"
           />
         </div>
         <h1 className="text-4xl font-bold text-center text-[rgb(var(--color-primary))] mb-4 animate-bounce">
