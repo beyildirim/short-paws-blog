@@ -152,16 +152,19 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: STORAGE_KEYS.SETTINGS,
       version: 1,
-      migrate: (state: any) => {
-        if (!state?.settings) return state;
+      migrate: (state: unknown) => {
+        if (!state || typeof state !== 'object') return state;
+        const typedState = state as { settings?: Partial<Settings> } & Record<string, unknown>;
+        if (!typedState.settings) return state;
+        const persistedSettings = typedState.settings;
         return {
-          ...state,
+          ...typedState,
           settings: {
             ...defaultSettings,
-            ...state.settings,
-            seo: { ...defaultSettings.seo, ...(state.settings.seo ?? {}) },
-            social: { ...defaultSettings.social, ...(state.settings.social ?? {}) },
-            author: { ...defaultSettings.author, ...(state.settings.author ?? {}) },
+            ...persistedSettings,
+            seo: { ...defaultSettings.seo, ...(persistedSettings.seo ?? {}) },
+            social: { ...defaultSettings.social, ...(persistedSettings.social ?? {}) },
+            author: { ...defaultSettings.author, ...(persistedSettings.author ?? {}) },
           },
         };
       },

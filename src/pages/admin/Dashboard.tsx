@@ -115,7 +115,7 @@ export default function Dashboard() {
   };
 
   const handleSaveSettings = async () => {
-    const updatedSettings: any = {
+    const updatedSettings: Partial<typeof settings> = {
       title: settingsData.title,
       description: settingsData.description,
       seo: settingsData.seo,

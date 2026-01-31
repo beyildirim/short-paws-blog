@@ -83,15 +83,17 @@ export const useNewsletterStore = create<NewsletterState>()(
     {
       name: STORAGE_KEYS.NEWSLETTER,
       version: 1,
-      migrate: (state: any) => {
-        if (!state?.subscribers) return state;
-        const allHashed = state.subscribers.every(
-          (sub: any) => typeof sub.emailHash === 'string' && sub.emailHash.length > 0
+      migrate: (state: unknown) => {
+        if (!state || typeof state !== 'object') return state;
+        const typedState = state as { subscribers?: Subscriber[] } & Record<string, unknown>;
+        if (!Array.isArray(typedState.subscribers)) return state;
+        const allHashed = typedState.subscribers.every(
+          (sub) => typeof sub.emailHash === 'string' && sub.emailHash.length > 0
         );
         if (!allHashed) {
-          return { ...state, subscribers: [] };
+          return { ...typedState, subscribers: [] };
         }
-        return state;
+        return typedState;
       },
     }
   )

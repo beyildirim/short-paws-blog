@@ -28,8 +28,8 @@ window.ResizeObserver = ResizeObserverStub;
 element.scrollIntoView = jest.fn();
 
 // Add TextEncoder and TextDecoder for JSDOM
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder as any;
+globalThis.TextEncoder = TextEncoder;
+globalThis.TextDecoder = TextDecoder;
 
 // Mock localStorage
 const localStorageMock = (() => {
