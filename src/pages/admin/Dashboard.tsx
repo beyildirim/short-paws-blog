@@ -127,7 +127,7 @@ export default function Dashboard() {
     if (settingsData.adminPassword) {
       const validation = validatePassword(settingsData.adminPassword);
       if (!validation.valid) {
-        alert(validation.message || 'Password does not meet requirements.');
+        alert(validation.message);
         return;
       }
       updatedSettings.adminPassword = await hashPassword(settingsData.adminPassword);
@@ -374,12 +374,14 @@ export default function Dashboard() {
                               <button
                                 onClick={() => handleEdit(post)}
                                 className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg transition-colors duration-300"
+                                aria-label="Edit post"
                               >
                                 <PenSquare size={20} />
                               </button>
                               <button
                                 onClick={() => handleDelete(post.id)}
                                 className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors duration-300"
+                                aria-label="Delete post"
                               >
                                 <Trash2 size={20} />
                               </button>

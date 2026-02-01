@@ -57,7 +57,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Try Again
             </button>
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.assign('/')}
               className="w-full mt-3 flex items-center justify-center gap-2 bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition-colors duration-300"
             >
               Go Home

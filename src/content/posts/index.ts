@@ -16,12 +16,16 @@ interface Frontmatter {
   author?: string;
 }
 
-type GlobLoader = (
+export type GlobLoader = (
   pattern: string,
   options: { eager: true; query: string; import: 'default' }
 ) => Record<string, string>;
 
-const glob = (import.meta as ImportMeta & { glob?: GlobLoader }).glob;
+const getGlob = (): GlobLoader | undefined =>
+  (globalThis as { __CONTENT_GLOB__?: GlobLoader }).__CONTENT_GLOB__
+  ?? (import.meta as ImportMeta & { glob?: GlobLoader }).glob;
+
+const glob = getGlob();
 const modules = glob ? glob('./*.md', { eager: true, query: '?raw', import: 'default' }) : {};
 
 const parseFrontmatter = (raw: string): { data: Frontmatter; content: string } => {
@@ -50,31 +54,34 @@ const parsePublishedAt = (data: Frontmatter): string => {
   return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
 };
 
-export const contentPosts: Post[] = Object.entries(modules)
-  .map(([path, raw]) => {
-    const { data, content } = parseFrontmatter(raw);
-    const frontmatter = data as Frontmatter;
-    const idFromFile = path.split('/').pop()?.replace(/\.md$/, '') ?? '';
-    const slug = frontmatter.slug || slugify(frontmatter.title || idFromFile);
-    const status = frontmatter.status || 'published';
+const buildContentPosts = (rawModules: Record<string, string>): Post[] =>
+  Object.entries(rawModules)
+    .map(([path, raw]) => {
+      const { data, content } = parseFrontmatter(raw);
+      const frontmatter = data as Frontmatter;
+      const idFromFile = path.split('/').pop()?.replace(/\.md$/, '') || '';
+      const slug = frontmatter.slug || slugify(frontmatter.title || idFromFile);
+      const status = frontmatter.status || 'published';
 
-    return {
-      id: slug,
-      title: frontmatter.title || slug,
-      excerpt: frontmatter.excerpt || content.slice(0, 140).trim() + '…',
-      content: content.trim(),
-      publishedAt: parsePublishedAt(frontmatter),
-      updatedAt: frontmatter.updatedAt,
-      status,
-      tags: normalizeTags(frontmatter.tags),
-      icon: frontmatter.icon || 'cat',
-      coverImage: frontmatter.coverImage,
-      author: frontmatter.author,
-      readTime: estimateReadTime(content),
-      source: 'content',
-    } satisfies Post;
-  })
-  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+      return {
+        id: slug,
+        title: frontmatter.title || slug,
+        excerpt: frontmatter.excerpt || content.slice(0, 140).trim() + '…',
+        content: content.trim(),
+        publishedAt: parsePublishedAt(frontmatter),
+        updatedAt: frontmatter.updatedAt,
+        status,
+        tags: normalizeTags(frontmatter.tags),
+        icon: frontmatter.icon || 'cat',
+        coverImage: frontmatter.coverImage,
+        author: frontmatter.author,
+        readTime: estimateReadTime(content),
+        source: 'content',
+      } satisfies Post;
+    })
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+export const contentPosts: Post[] = buildContentPosts(modules);
 
 export const isPostVisible = (post: Post, now: Date = new Date()): boolean => {
   if (post.status === 'draft') return false;
@@ -82,4 +89,11 @@ export const isPostVisible = (post: Post, now: Date = new Date()): boolean => {
     return new Date(post.publishedAt).getTime() <= now.getTime();
   }
   return true;
+};
+
+export const __testables = {
+  parseFrontmatter,
+  normalizeTags,
+  parsePublishedAt,
+  buildContentPosts,
 };

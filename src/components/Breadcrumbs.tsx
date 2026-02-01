@@ -45,7 +45,6 @@ export function Breadcrumbs() {
             {index > 0 && <ChevronRight size={14} className="text-gray-400" />}
             {index === breadcrumbs.length - 1 ? (
               <span className="text-purple-600 font-medium flex items-center gap-1">
-                {index === 0 && <Home size={14} />}
                 {crumb.label}
               </span>
             ) : (

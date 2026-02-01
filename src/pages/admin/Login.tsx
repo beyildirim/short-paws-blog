@@ -37,7 +37,7 @@ export default function Login() {
 
         const validation = validatePassword(password);
         if (!validation.valid) {
-          setError(validation.message || 'Password does not meet requirements');
+          setError(validation.message);
           return;
         }
 

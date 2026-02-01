@@ -117,7 +117,11 @@ export async function verifyPassword(
 /**
  * Validate password strength for new passwords
  */
-export function validatePassword(password: string): { valid: boolean; message?: string } {
+export type PasswordValidation =
+  | { valid: true }
+  | { valid: false; message: string };
+
+export function validatePassword(password: string): PasswordValidation {
   if (password.length < 10) {
     return { valid: false, message: 'Password must be at least 10 characters long.' };
   }

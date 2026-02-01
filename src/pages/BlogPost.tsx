@@ -29,7 +29,6 @@ function BlogPost() {
   const [commentStatus, setCommentStatus] = useState<{ message: string; isError: boolean } | null>(null);
 
   const post = posts.find((p) => p.id === postId);
-  const comments = postId ? getCommentsByPostId(postId) : [];
 
   const { previous, next } = useMemo(() => {
     if (!post) return { previous: null, next: null };
@@ -40,25 +39,6 @@ function BlogPost() {
     if (!post) return [];
     return getRelatedPosts(posts, post, 3);
   }, [posts, post]);
-
-  const handleCommentSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setCommentStatus(null);
-
-    if (!postId) return;
-
-    const result = addComment(postId, commentAuthor, commentEmail, commentContent);
-    setCommentStatus({ message: result.message, isError: !result.success });
-
-    if (result.success) {
-      setCommentAuthor('');
-      setCommentEmail('');
-      setCommentContent('');
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setCommentStatus(null), 3000);
-    }
-  };
 
   if (!post) {
     return (
@@ -79,6 +59,25 @@ function BlogPost() {
       </>
     );
   }
+
+  const comments = getCommentsByPostId(post.id);
+
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCommentStatus(null);
+
+    const result = addComment(post.id, commentAuthor, commentEmail, commentContent);
+    setCommentStatus({ message: result.message, isError: !result.success });
+
+    if (result.success) {
+      setCommentAuthor('');
+      setCommentEmail('');
+      setCommentContent('');
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setCommentStatus(null), 3000);
+    }
+  };
 
   const IconComponent = iconMap[post.icon];
   const canonicalUrl = (() => {

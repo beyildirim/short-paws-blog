@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Cat, Stars, BookOpen, Sparkles, Lock } from 'lucide-react';
+import { getEnvBoolean } from '../utils/env';
 import { ROUTES } from '../constants';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const adminEnabled = import.meta.env.VITE_ENABLE_ADMIN === 'true' || import.meta.env.DEV;
+  const adminEnabled = getEnvBoolean('VITE_ENABLE_ADMIN') || getEnvBoolean('DEV');
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);

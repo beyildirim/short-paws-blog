@@ -1,9 +1,10 @@
 import { Helmet } from 'react-helmet-async';
+import { getEnv } from '../utils/env';
 
 export function Analytics() {
-  const domain = import.meta.env.VITE_PLAUSIBLE_DOMAIN as string | undefined;
+  const domain = getEnv('VITE_PLAUSIBLE_DOMAIN');
   if (!domain) return null;
-  const src = (import.meta.env.VITE_PLAUSIBLE_SRC as string | undefined) || 'https://plausible.io/js/script.js';
+  const src = getEnv('VITE_PLAUSIBLE_SRC') || 'https://plausible.io/js/script.js';
 
   return (
     <Helmet>

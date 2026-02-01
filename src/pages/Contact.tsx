@@ -34,13 +34,14 @@ function Contact() {
     }
     
     setIsSubmitting(true);
+    const form = e.currentTarget;
     
     // Simulate sending (in real app, this would be an API call)
     setTimeout(() => {
       setFormStatus('Message sent! Thank you for reaching out! 💌');
       setIsError(false);
       setIsSubmitting(false);
-      e.currentTarget.reset();
+      form.reset();
     }, 1000);
   };
 

@@ -2,19 +2,12 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../constants';
 import { hashEmail, isValidEmail, normalizeEmail } from '../utils/crypto';
+import { getEnv } from '../utils/env';
 
 export interface Subscriber {
   emailHash: string;
   subscribedAt: string;
 }
-
-const getNewsletterEndpoint = (): string | undefined => {
-  if (typeof import.meta !== 'undefined' && 'env' in import.meta) {
-    const env = import.meta.env as { VITE_NEWSLETTER_ENDPOINT?: string };
-    return env.VITE_NEWSLETTER_ENDPOINT;
-  }
-  return undefined;
-};
 
 interface NewsletterState {
   subscribers: Subscriber[];
@@ -29,7 +22,7 @@ export const useNewsletterStore = create<NewsletterState>()(
       subscribe: async (email: string) => {
         const normalizedEmail = normalizeEmail(email);
         const { subscribers } = get();
-        const endpoint = getNewsletterEndpoint();
+        const endpoint = getEnv('VITE_NEWSLETTER_ENDPOINT');
 
         // Validate email format
         if (!isValidEmail(normalizedEmail)) {
@@ -80,7 +73,7 @@ export const useNewsletterStore = create<NewsletterState>()(
         if (!isValidEmail(normalizedEmail)) {
           return false;
         }
-        const endpoint = getNewsletterEndpoint();
+        const endpoint = getEnv('VITE_NEWSLETTER_ENDPOINT');
         if (endpoint) {
           return false;
         }

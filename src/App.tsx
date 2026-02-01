@@ -8,6 +8,7 @@ import { MobileNav } from './components/MobileNav';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { PageSkeleton } from './components/PageSkeleton';
 import { Analytics } from './components/Analytics';
+import { getEnvBoolean } from './utils/env';
 import { ROUTES, ICON_SIZE, ANIMATION_DURATION } from './constants';
 
 // Lazy load pages for better performance
@@ -22,7 +23,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   const { settings } = useSettingsStore();
-  const adminEnabled = import.meta.env.VITE_ENABLE_ADMIN === 'true' || import.meta.env.DEV;
+  const adminEnabled = getEnvBoolean('VITE_ENABLE_ADMIN') || getEnvBoolean('DEV');
 
   // Convert hex colors to RGB for CSS variables
   const hexToRgb = (hex: string) => {
