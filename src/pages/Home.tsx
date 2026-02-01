@@ -49,6 +49,8 @@ function Home() {
             alt="Profile"
             className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover`}
             loading="eager"
+            width={192}
+            height={192}
           />
         </div>
         <h1 className="text-4xl font-bold text-center text-[rgb(var(--color-primary))] mb-4 animate-bounce">

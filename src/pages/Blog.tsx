@@ -102,6 +102,8 @@ function Blog() {
                       className="w-full h-48 object-cover"
                       loading="lazy"
                       decoding="async"
+                      width={1200}
+                      height={480}
                     />
                   </div>
                 )}

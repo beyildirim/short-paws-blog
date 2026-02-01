@@ -147,6 +147,8 @@ function BlogPost() {
                 className="w-full h-64 object-cover"
                 loading="lazy"
                 decoding="async"
+                width={1200}
+                height={640}
               />
             </div>
           )}
