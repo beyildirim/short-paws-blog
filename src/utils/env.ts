@@ -3,6 +3,7 @@ export type RuntimeEnv = {
   VITE_PLAUSIBLE_DOMAIN?: string;
   VITE_PLAUSIBLE_SRC?: string;
   VITE_NEWSLETTER_ENDPOINT?: string;
+  VITE_ADMIN_PASSWORD_HASH?: string;
   DEV?: boolean | string;
 };
 

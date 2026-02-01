@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../constants';
+import { getEnv } from '../utils/env';
 import settingsSeed from '../data/settings.json';
 
 interface ThemeSettings {
@@ -140,9 +141,17 @@ const mergeSettings = (base: Settings, override?: Partial<Settings>): Settings =
   },
 });
 
+const envAdminPassword = (() => {
+  const value = getEnv('VITE_ADMIN_PASSWORD_HASH');
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+  return '';
+})();
+
 const defaultSettings = mergeSettings(
   baseSettings,
-  { ...(settingsSeed as Partial<Settings>), adminPassword: '' }
+  { ...(settingsSeed as Partial<Settings>), adminPassword: envAdminPassword }
 );
 
 export const useSettingsStore = create<SettingsState>()(
