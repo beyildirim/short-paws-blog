@@ -24,7 +24,12 @@ jobs:
         run: npm run lint
       - name: Lint Content
         run: npm run lint:content
-      - name: Test
-        run: npm test -- --passWithNoTests
+      - name: Test (coverage)
+        run: npm run test:coverage -- --passWithNoTests
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
       - name: Build
         run: npm run build

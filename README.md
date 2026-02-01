@@ -2,6 +2,7 @@
 
 [![CodeQL](https://github.com/beyildirim/short-paws-blog/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/beyildirim/short-paws-blog/actions/workflows/github-code-scanning/codeql)
 [![Dependabot Updates](https://github.com/beyildirim/short-paws-blog/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/beyildirim/short-paws-blog/actions/workflows/dependabot/dependabot-updates)
+[![Codecov](https://codecov.io/gh/beyildirim/short-paws-blog/branch/master/graph/badge.svg)](https://codecov.io/gh/beyildirim/short-paws-blog)
 
 A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Specialist extraordinaire! Built with a delightful 90s-inspired aesthetic and modern web technologies.
 
