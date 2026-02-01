@@ -186,6 +186,9 @@ Navigate to **Admin → Theme** to customize:
 - Font Family (Comic, Sans Serif, Serif)
 - Border Style (Thick, Medium, Thin)
 
+To make those choices the **default on deployments** (Netlify, etc.), update
+`src/data/settings.json` and redeploy so new visitors receive the same look.
+
 ### Content Management
 Update page content via **Admin → Pages**:
 - Home page welcome text and bio

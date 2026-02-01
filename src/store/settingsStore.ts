@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../constants';
+import settingsSeed from '../data/settings.json';
 
 interface ThemeSettings {
   primaryColor: string;
@@ -68,7 +69,7 @@ interface SettingsState {
   updatePageContent: (page: keyof PageContent, content: Partial<PageContent[keyof PageContent]>) => void;
 }
 
-const defaultSettings: Settings = {
+const baseSettings: Settings = {
   title: "Gizmeli Kedi's Personal Website",
   description: "Planning Specialist turning chaos into order, one plan at a time",
   // Set via admin setup on first login
@@ -123,13 +124,34 @@ const defaultSettings: Settings = {
   }
 };
 
+const mergeSettings = (base: Settings, override?: Partial<Settings>): Settings => ({
+  ...base,
+  ...override,
+  theme: { ...base.theme, ...(override?.theme ?? {}) },
+  seo: { ...base.seo, ...(override?.seo ?? {}) },
+  social: { ...base.social, ...(override?.social ?? {}) },
+  author: { ...base.author, ...(override?.author ?? {}) },
+  content: {
+    ...base.content,
+    ...(override?.content ?? {}),
+    home: { ...base.content.home, ...(override?.content?.home ?? {}) },
+    about: { ...base.content.about, ...(override?.content?.about ?? {}) },
+    contact: { ...base.content.contact, ...(override?.content?.contact ?? {}) },
+  },
+});
+
+const defaultSettings = mergeSettings(
+  baseSettings,
+  { ...(settingsSeed as Partial<Settings>), adminPassword: '' }
+);
+
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       settings: defaultSettings,
       updateSettings: (newSettings) =>
         set((state) => ({
-          settings: { ...state.settings, ...newSettings }
+          settings: mergeSettings(state.settings, newSettings)
         })),
       updateTheme: (newTheme) =>
         set((state) => ({
@@ -159,13 +181,7 @@ export const useSettingsStore = create<SettingsState>()(
         const persistedSettings = typedState.settings;
         return {
           ...typedState,
-          settings: {
-            ...defaultSettings,
-            ...persistedSettings,
-            seo: { ...defaultSettings.seo, ...(persistedSettings.seo ?? {}) },
-            social: { ...defaultSettings.social, ...(persistedSettings.social ?? {}) },
-            author: { ...defaultSettings.author, ...(persistedSettings.author ?? {}) },
-          },
+          settings: mergeSettings(defaultSettings, persistedSettings),
         };
       },
     }

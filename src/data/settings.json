@@ -1,0 +1,53 @@
+{
+  "title": "Gizmeli Kedi's Personal Website",
+  "description": "Planning Specialist turning chaos into order, one plan at a time",
+  "adminPassword": "",
+  "theme": {
+    "primaryColor": "#9333ea",
+    "secondaryColor": "#ec4899",
+    "accentColor": "#fde047",
+    "fontFamily": "Comic",
+    "borderStyle": "border-4"
+  },
+  "seo": {
+    "siteUrl": "",
+    "defaultOgImage": "",
+    "twitterHandle": ""
+  },
+  "social": {
+    "twitter": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "author": {
+    "name": "Gizmeli Kedi",
+    "role": "Planning Specialist",
+    "bio": "Turning chaos into order, one plan at a time",
+    "avatar": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400&h=400&fit=crop"
+  },
+  "content": {
+    "home": {
+      "welcomeText": "Welcome to Gizmeli Kedi's Personal Website!",
+      "profileImage": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400&h=400&fit=crop",
+      "jobTitle": "Planning Specialist",
+      "bio": "Turning chaos into order, one plan at a time"
+    },
+    "about": {
+      "title": "Professional Journey",
+      "professionalJourney": "With years of experience in strategic planning and project coordination, I specialize in turning complex ideas into actionable plans.",
+      "skills": [
+        "Project Management",
+        "Strategic Planning",
+        "Resource Allocation",
+        "Risk Assessment"
+      ],
+      "workPhilosophy": "I believe in creating structured, achievable plans while maintaining flexibility for unexpected challenges."
+    },
+    "contact": {
+      "email": "gizmelikedi@example.com",
+      "phone": "+1 (555) 123-4567",
+      "address": "Planning Department, Dream Corp",
+      "officeHours": "Monday - Friday: 9:00 AM - 5:00 PM\nWeekend: By appointment only"
+    }
+  }
+}
