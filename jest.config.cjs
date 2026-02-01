@@ -32,6 +32,10 @@ module.exports = {
       statements: 80,
     },
   },
+  reporters: [
+    'default',
+    ['jest-junit', { outputDirectory: '.', outputName: 'junit.xml' }],
+  ],
   transformIgnorePatterns: [
     'node_modules/(?!(node-fetch|data-uri-to-buffer|fetch-blob|formdata-polyfill)/)',
   ],

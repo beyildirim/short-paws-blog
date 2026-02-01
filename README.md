@@ -205,6 +205,10 @@ npm run test:watch
 npm run test:coverage
 ```
 
+### 📊 Coverage & CI Analytics
+- CI uploads coverage, test results (JUnit), and Vite bundle analysis to Codecov.
+- Set the `CODECOV_TOKEN` repository secret to enable uploads.
+
 ## 📄 License
 
 This project is private and proprietary.
