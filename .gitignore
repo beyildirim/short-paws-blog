@@ -1,3 +1,6 @@
 node_modules
 coverage
 junit.xml
+
+# Local Netlify folder
+.netlify
