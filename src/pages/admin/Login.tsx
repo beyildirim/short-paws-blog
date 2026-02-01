@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useSettingsStore } from '../../store/settingsStore';
@@ -11,15 +11,39 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const login = useAuthStore((state) => state.login);
+  const sessionExpired = useAuthStore((state) => state.sessionExpired);
+  const clearSessionExpired = useAuthStore((state) => state.clearSessionExpired);
   const { settings, updateSettings } = useSettingsStore();
   const needsSetup = !settings.adminPassword;
+
+  useEffect(() => {
+    if (location.state && typeof (location.state as { reason?: string }).reason === 'string') {
+      const reason = (location.state as { reason?: string }).reason;
+      if (reason === 'expired') {
+        setNotice('Your session expired. Please log in again.');
+      }
+      if (reason === 'password-updated') {
+        setNotice('Password updated. Please log in again.');
+      }
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (sessionExpired) {
+      setNotice('Your session expired. Please log in again.');
+      clearSessionExpired();
+    }
+  }, [clearSessionExpired, sessionExpired]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setNotice('');
 
     setLoading(true);
     
@@ -76,6 +100,12 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
           {needsSetup ? 'Set Admin Password' : 'Admin Login'}
         </h2>
+
+        {notice && (
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded mb-4">
+            {notice}
+          </div>
+        )}
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

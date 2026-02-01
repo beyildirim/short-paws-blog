@@ -654,20 +654,18 @@ describe('pages', () => {
     fireEvent.change(screen.getByPlaceholderText('Role / Title'), { target: { value: 'Role' } });
     fireEvent.change(screen.getByPlaceholderText('Short bio'), { target: { value: 'Bio' } });
     fireEvent.change(screen.getByPlaceholderText('Avatar image URL'), { target: { value: 'https://example.com/avatar.jpg' } });
-    fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'short' } });
     await act(async () => {
       fireEvent.click(screen.getByText('Save Settings'));
     });
     expect(alertSpy).toHaveBeenCalled();
-    fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'Password1234' } });
+    fireEvent.change(screen.getByPlaceholderText('Create a strong password'), { target: { value: 'Password1234' } });
+    fireEvent.change(screen.getByPlaceholderText('Re-enter new password'), { target: { value: 'Password1234' } });
     await act(async () => {
-      fireEvent.click(screen.getByText('Save Settings'));
+      fireEvent.click(screen.getByText('Update Password'));
       await new Promise((resolve) => setTimeout(resolve, 200));
     });
     expect(updateSettings).toHaveBeenCalled();
-    await act(async () => {
-      fireEvent.click(screen.getByText('Save Settings'));
-    });
+    expect(logout).toHaveBeenCalled();
 
     Object.defineProperty(window, 'alert', { value: originalAlert, configurable: true });
     Object.defineProperty(window, 'confirm', { value: originalConfirm, configurable: true });

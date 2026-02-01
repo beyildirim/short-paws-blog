@@ -17,7 +17,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { useBlogStore, BlogPost, IconName } from '../../store/blogStore';
 import { useSettingsStore } from '../../store/settingsStore';
-import { hashPassword, validatePassword } from '../../utils/crypto';
+import { hashPassword, validatePassword, verifyPassword } from '../../utils/crypto';
 import { formatDate } from '../../utils/helpers';
 import { ROUTES } from '../../constants';
 
@@ -43,11 +43,16 @@ export default function Dashboard() {
   const [settingsData, setSettingsData] = useState({
     title: settings.title,
     description: settings.description,
-    adminPassword: '',
     seo: { ...settings.seo },
     social: { ...settings.social },
     author: { ...settings.author },
   });
+  const [passwordForm, setPasswordForm] = useState({
+    current: '',
+    next: '',
+    confirm: '',
+  });
+  const [passwordMessage, setPasswordMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [themeData, setThemeData] = useState(settings.theme);
   const [pageContent, setPageContent] = useState(settings.content);
 
@@ -123,19 +128,47 @@ export default function Dashboard() {
       author: settingsData.author,
     };
     
-    // Hash password if provided
-    if (settingsData.adminPassword) {
-      const validation = validatePassword(settingsData.adminPassword);
-      if (!validation.valid) {
-        alert(validation.message);
+    updateSettings(updatedSettings);
+    alert('Settings updated successfully!');
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordMessage(null);
+
+    if (settings.adminPassword) {
+      if (!passwordForm.current) {
+        setPasswordMessage({ type: 'error', text: 'Enter your current password.' });
         return;
       }
-      updatedSettings.adminPassword = await hashPassword(settingsData.adminPassword);
+      const currentCheck = await verifyPassword(passwordForm.current, settings.adminPassword);
+      if (!currentCheck.valid) {
+        setPasswordMessage({ type: 'error', text: 'Current password is incorrect.' });
+        return;
+      }
     }
-    
-    updateSettings(updatedSettings);
-    setSettingsData({ ...settingsData, adminPassword: '' }); // Clear password field
-    alert('Settings updated successfully!');
+
+    if (!passwordForm.next || !passwordForm.confirm) {
+      setPasswordMessage({ type: 'error', text: 'Enter and confirm your new password.' });
+      return;
+    }
+
+    if (passwordForm.next !== passwordForm.confirm) {
+      setPasswordMessage({ type: 'error', text: 'Passwords do not match.' });
+      return;
+    }
+
+    const validation = validatePassword(passwordForm.next);
+    if (!validation.valid) {
+      setPasswordMessage({ type: 'error', text: validation.message });
+      return;
+    }
+
+    const newHash = await hashPassword(passwordForm.next);
+    updateSettings({ adminPassword: newHash });
+    setPasswordForm({ current: '', next: '', confirm: '' });
+    setPasswordMessage({ type: 'success', text: 'Password updated. Please log in again.' });
+    logout();
+    navigate(ROUTES.ADMIN_LOGIN, { state: { reason: 'password-updated' } });
   };
 
   const handleSaveTheme = () => {
@@ -889,21 +922,69 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-2">
+                  <div className="bg-purple-50 border-2 border-purple-100 rounded-lg p-4 space-y-4">
                     <h3 className="text-lg font-bold text-purple-600">Admin Security</h3>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      New Admin Password (leave blank to keep current)
-                    </label>
-                    <input
-                      type="password"
-                      value={settingsData.adminPassword}
-                      onChange={(e) => setSettingsData({ ...settingsData, adminPassword: e.target.value })}
-                      className="w-full p-2 border rounded-lg"
-                      placeholder="Enter new password"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      🔒 Passwords are automatically hashed (PBKDF2 + salt) for security
+                    {passwordMessage && (
+                      <div
+                        className={`border px-3 py-2 rounded text-sm ${
+                          passwordMessage.type === 'error'
+                            ? 'bg-red-50 border-red-200 text-red-700'
+                            : 'bg-green-50 border-green-200 text-green-700'
+                        }`}
+                      >
+                        {passwordMessage.text}
+                      </div>
+                    )}
+                    {settings.adminPassword && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Current Password
+                        </label>
+                        <input
+                          type="password"
+                          value={passwordForm.current}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })}
+                          className="w-full p-2 border rounded-lg"
+                          placeholder="Enter current password"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        value={passwordForm.next}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, next: e.target.value })}
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="Create a strong password"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        value={passwordForm.confirm}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })}
+                        className="w-full p-2 border rounded-lg"
+                        placeholder="Re-enter new password"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      🔒 Minimum 10 characters with letters and numbers. Passwords are hashed (PBKDF2 + salt).
                     </p>
+                    <div className="flex justify-end">
+                      <button
+                        onClick={handleChangePassword}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300"
+                      >
+                        <Save size={20} />
+                        Update Password
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex justify-end">

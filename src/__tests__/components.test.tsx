@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { TagFilter } from '../components/TagFilter';
 import { ReadingProgress } from '../components/ReadingProgress';
 import { ProtectedRoute } from '../components/ProtectedRoute';
@@ -47,21 +47,38 @@ describe('components', () => {
   it('ProtectedRoute redirects when not authenticated', () => {
     render(
       <MemoryRouter initialEntries={['/admin']}>
-        <ProtectedRoute>
-          <div>Secret</div>
-        </ProtectedRoute>
+        <Routes>
+          <Route
+            path="/admin"
+            element={(
+              <ProtectedRoute>
+                <div>Secret</div>
+              </ProtectedRoute>
+            )}
+          />
+          <Route path="/admin/login" element={<div>Login</div>} />
+        </Routes>
       </MemoryRouter>
     );
     expect(screen.queryByText('Secret')).not.toBeInTheDocument();
+    expect(screen.getByText('Login')).toBeInTheDocument();
   });
 
   it('ProtectedRoute renders children when authenticated', () => {
     useAuthStore.setState({ isAuthenticated: true });
     render(
       <MemoryRouter initialEntries={['/admin']}>
-        <ProtectedRoute>
-          <div>Secret</div>
-        </ProtectedRoute>
+        <Routes>
+          <Route
+            path="/admin"
+            element={(
+              <ProtectedRoute>
+                <div>Secret</div>
+              </ProtectedRoute>
+            )}
+          />
+          <Route path="/admin/login" element={<div>Login</div>} />
+        </Routes>
       </MemoryRouter>
     );
     expect(screen.getByText('Secret')).toBeInTheDocument();

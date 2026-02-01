@@ -42,7 +42,7 @@ describe('stores', () => {
       settings: clone(baseSettings),
       ...baseSettingsActions,
     } as never);
-    useAuthStore.setState({ isAuthenticated: false });
+    useAuthStore.setState({ isAuthenticated: false, sessionExpiresAt: null, sessionExpired: false });
     loginRateLimiter.reset(ADMIN_USERNAME);
     (globalThis as { __ENV__?: Record<string, string> }).__ENV__ = {};
   });
@@ -263,8 +263,22 @@ describe('stores', () => {
     const ok = await login(ADMIN_USERNAME, 'Password123');
     expect(ok.success).toBe(true);
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(useAuthStore.getState().sessionExpiresAt).toBeTruthy();
     logout();
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
+  });
+
+  it('expires sessions after ttl', () => {
+    const now = Date.now();
+    useAuthStore.setState({
+      isAuthenticated: true,
+      sessionExpiresAt: now - 1000,
+      sessionExpired: false,
+    });
+    const valid = useAuthStore.getState().ensureSession();
+    expect(valid).toBe(false);
+    expect(useAuthStore.getState().isAuthenticated).toBe(false);
+    expect(useAuthStore.getState().sessionExpired).toBe(true);
   });
 
   it('rate limits login attempts', async () => {
