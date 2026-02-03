@@ -45,14 +45,16 @@ export const STORAGE_KEYS = {
   BLOG: 'blog-storage',
   NEWSLETTER: 'newsletter-storage',
   COMMENTS: 'comments-storage',
+  BOOKMARKS: 'bookmarks-storage',
+  VIEWS: 'views-storage',
 } as const;
 
 // Social share URLs
 export const SOCIAL_SHARE = {
-  TWITTER: (url: string, text: string) => 
+  TWITTER: (url: string, text: string) =>
     `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
-  LINKEDIN: (url: string) => 
+  LINKEDIN: (url: string) =>
     `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-  FACEBOOK: (url: string) => 
+  FACEBOOK: (url: string) =>
     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
 } as const;
