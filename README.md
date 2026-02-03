@@ -25,12 +25,15 @@ A modern, playful personal blog/portfolio website for Gizmeli Kedi - Planning Sp
 - Newsletter subscription
 - Markdown-based posts in `src/content/posts`
 - Reading progress indicator and prev/next navigation
+- **Bookmarking System**: Save posts to a local reading list
+- **View Counters**: Track post popularity (local simulation)
 - SEO-optimized with meta tags and Open Graph support
 
 ### 🔐 **Admin Dashboard**
 - Protected admin routes with authentication
 - Manage blog posts (create, edit, delete)
 - Customize theme colors and fonts
+- **Modular Settings**: manage Site, SEO, Social, and Author settings independently
 - Edit page content dynamically
 - Secure password hashing (PBKDF2 + salt)
 - Rate limiting on forms
@@ -112,6 +115,13 @@ src/
 │   ├── MobileNav.tsx
 │   ├── ProtectedRoute.tsx
 │   └── SocialShare.tsx
+│   ├── admin/             # Admin-specific components
+│   │   ├── PostEditor.tsx
+│   │   ├── SiteSettings.tsx
+│   │   └── ...
+│   ├── forms/             # Reusable form components
+│   │   ├── FormInput.tsx
+│   │   └── ...
 ├── constants/           # App-wide constants
 │   └── index.ts
 ├── pages/              # Page components
