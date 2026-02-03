@@ -132,7 +132,7 @@ function Blog() {
                           {post.tags.length > 0 && (
                             <div className="flex flex-wrap gap-2 mb-4">
                               {post.tags.map((tag) => (
-                                <span key={tag} className="text-xs px-2 py-1 bg-white border border-purple-200 rounded-full text-purple-700 tag-pill cursor-pointer">
+                                <span key={tag} className="text-xs px-2 py-1 bg-white border border-purple-200 rounded-full text-purple-700 tag-pill">
                                   #{tag}
                                 </span>
                               ))}
