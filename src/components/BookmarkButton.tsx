@@ -14,8 +14,8 @@ export function BookmarkButton({
     showLabel = false,
     className = ''
 }: BookmarkButtonProps) {
-    const { isBookmarked, toggleBookmark } = useBookmarkStore();
-    const bookmarked = isBookmarked(postId);
+    const bookmarked = useBookmarkStore((state) => state.bookmarkedPosts.includes(postId));
+    const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
