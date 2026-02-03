@@ -152,23 +152,27 @@ export function SiteSettings({
                     <h3 className="text-lg font-bold text-purple-600">Author Profile</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
+                            label="Name"
                             value={settingsData.author.name}
                             onChange={(e) => updateAuthor('name', e.target.value)}
                             placeholder="Author name"
                         />
                         <FormInput
+                            label="Role"
                             value={settingsData.author.role}
                             onChange={(e) => updateAuthor('role', e.target.value)}
                             placeholder="Role / Title"
                         />
                     </div>
                     <FormTextarea
+                        label="Bio"
                         value={settingsData.author.bio}
                         onChange={(e) => updateAuthor('bio', e.target.value)}
                         rows={3}
                         placeholder="Short bio"
                     />
                     <FormInput
+                        label="Avatar URL"
                         type="url"
                         value={settingsData.author.avatar}
                         onChange={(e) => updateAuthor('avatar', e.target.value)}
