@@ -139,7 +139,7 @@ describe('pages', () => {
 
     fireEvent.change(screen.getByLabelText('Email address for newsletter'), { target: { value: 'user@example.com' } });
     fireEvent.submit(screen.getByRole('button', { name: 'Subscribe' }).closest('form') as HTMLFormElement);
-    await act(async () => {});
+    await act(async () => { });
     expect(subscribeMock).toHaveBeenCalled();
     jest.useRealTimers();
   });
@@ -159,7 +159,7 @@ describe('pages', () => {
 
     fireEvent.change(screen.getByLabelText('Email address for newsletter'), { target: { value: 'user@example.com' } });
     fireEvent.submit(screen.getByRole('button', { name: 'Subscribe' }).closest('form') as HTMLFormElement);
-    await act(async () => {});
+    await act(async () => { });
     const status = screen.getByText('Nope');
     expect(status).toHaveClass('bg-red-100');
   });
@@ -294,7 +294,7 @@ describe('pages', () => {
     fireEvent.change(screen.getByLabelText('Email *'), { target: { value: 'bad' } });
     fireEvent.change(screen.getByLabelText('Comment *'), { target: { value: 'This is a great post!' } });
     fireEvent.submit(screen.getByText('Post Comment').closest('form') as HTMLFormElement);
-    await act(async () => {});
+    await act(async () => { });
     const status = screen.getByText('Please enter a valid email address');
     expect(status).toHaveClass('bg-red-100');
   });
@@ -388,8 +388,8 @@ describe('pages', () => {
         <Login />
       </MemoryRouter>
     );
-    fireEvent.change(screen.getByPlaceholderText('Create a strong password'), { target: { value: 'Password123' } });
-    fireEvent.change(screen.getByPlaceholderText('Re-enter password'), { target: { value: 'Password123' } });
+    fireEvent.change(screen.getByLabelText('New Password'), { target: { value: 'Password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'Password123' } });
     await act(async () => {
       fireEvent.submit(screen.getByRole('button', { name: 'Set Password' }).closest('form') as HTMLFormElement);
     });
@@ -403,15 +403,15 @@ describe('pages', () => {
         <Login />
       </MemoryRouter>
     );
-    fireEvent.change(screen.getByPlaceholderText('Create a strong password'), { target: { value: 'Password123' } });
-    fireEvent.change(screen.getByPlaceholderText('Re-enter password'), { target: { value: 'Different' } });
+    fireEvent.change(screen.getByLabelText('New Password'), { target: { value: 'Password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'Different' } });
     await act(async () => {
       fireEvent.submit(screen.getByRole('button', { name: 'Set Password' }).closest('form') as HTMLFormElement);
     });
     expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText('Create a strong password'), { target: { value: 'short' } });
-    fireEvent.change(screen.getByPlaceholderText('Re-enter password'), { target: { value: 'short' } });
+    fireEvent.change(screen.getByLabelText('New Password'), { target: { value: 'short' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'short' } });
     await act(async () => {
       fireEvent.submit(screen.getByRole('button', { name: 'Set Password' }).closest('form') as HTMLFormElement);
     });
@@ -496,7 +496,7 @@ describe('pages', () => {
     act(() => {
       useAuthStore.setState({ login: loginFail } as never);
     });
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
     fireEvent.change(screen.getByPlaceholderText('Enter username'), { target: { value: 'admin' } });
     fireEvent.change(screen.getByPlaceholderText('Enter password'), { target: { value: 'Password123' } });
     await act(async () => {
