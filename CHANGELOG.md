@@ -75,6 +75,20 @@
 - ✅ Proper semantic HTML structure
 - ✅ Theme color meta tag
 
+## [Unreleased]
+
+### Added
+- **Bookmarking System**: Users can now save posts to a local reading list (`bookmarkStore`).
+- **View Counters**: Blog posts now track and display view counts (simulated locally).
+- **Modular Admin Dashboard**: Refactored monolithic dashboard into `PostEditor`, `SiteSettings`, `ThemeSettings`, and `PagesSettings`.
+- **Reusable Form Components**: Introduced `FormInput`, `FormSelect`, and `FormTextarea` with consistent styling and validation.
+- **Accessibility Improvements**: Enhanced Login form with explicit label-input associations.
+- **Test Coverage**: Added tests for new stores (`bookmarkStore`, `viewsStore`) and form components.
+
+### Fixed
+- Memory leak in `Blog.tsx` newsletter subscription timeout.
+- Test failures in `pages.test.tsx` related to admin login selectors.
+
 ### 📁 New Files Created
 
 ```
