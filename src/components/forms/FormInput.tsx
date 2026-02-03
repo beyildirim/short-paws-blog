@@ -7,7 +7,7 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
   ({ label, error, className = '', id, ...props }, ref) => {
-    const inputId = id || `input-${label?.toLowerCase().replace(/\s+/g, '-')}`;
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
     
     return (
       <div>
