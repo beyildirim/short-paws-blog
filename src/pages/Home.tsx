@@ -47,13 +47,13 @@ function Home() {
           <ResponsiveImage
             src={settings.content.home.profileImage}
             alt="Profile"
-            className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover`}
+            className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover animate-float`}
             loading="eager"
             width={192}
             height={192}
           />
         </div>
-        <h1 className="text-4xl font-bold text-center text-[rgb(var(--color-primary))] mb-4 animate-bounce">
+        <h1 className="text-4xl font-bold text-center mb-4 gradient-text">
           Gizmeli Kedi
           <Stars className="inline-block ml-2 text-[rgb(var(--color-accent))]" aria-hidden="true" />
         </h1>
