@@ -37,10 +37,11 @@ export function ThemeSettings({ themeData, onChange, onSave }: ThemeSettingsProp
             <h2 className="text-2xl font-bold text-purple-600 mb-6">Theme Settings</h2>
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="theme-primary-color" className="block text-sm font-medium text-gray-700 mb-1">
                         Primary Color
                     </label>
                     <input
+                        id="theme-primary-color"
                         type="color"
                         value={themeData.primaryColor}
                         onChange={(e) => handleChange('primaryColor', e.target.value)}
