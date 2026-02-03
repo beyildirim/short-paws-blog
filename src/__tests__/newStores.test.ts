@@ -4,12 +4,8 @@ import { useViewsStore } from '../store/viewsStore';
 
 describe('bookmarkStore', () => {
     beforeEach(() => {
-        const { result } = renderHook(() => useBookmarkStore());
-        // Clear all bookmarks
         act(() => {
-            result.current.bookmarkedPosts.forEach((id) => {
-                result.current.removeBookmark(id);
-            });
+            useBookmarkStore.setState({ bookmarkedPosts: [] });
         });
     });
 
@@ -41,17 +37,17 @@ describe('bookmarkStore', () => {
     it('toggles a bookmark', () => {
         const { result } = renderHook(() => useBookmarkStore());
 
-        let wasAdded: boolean;
+        let wasAdded = false;
         act(() => {
             wasAdded = result.current.toggleBookmark('post-2');
         });
-        expect(wasAdded!).toBe(true);
+        expect(wasAdded).toBe(true);
         expect(result.current.isBookmarked('post-2')).toBe(true);
 
         act(() => {
             wasAdded = result.current.toggleBookmark('post-2');
         });
-        expect(wasAdded!).toBe(false);
+        expect(wasAdded).toBe(false);
         expect(result.current.isBookmarked('post-2')).toBe(false);
     });
 

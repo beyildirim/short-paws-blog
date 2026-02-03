@@ -46,7 +46,7 @@ export default function Login() {
     setNotice('');
 
     setLoading(true);
-    
+
     try {
       if (needsSetup) {
         if (!password || !confirmPassword) {
@@ -106,7 +106,7 @@ export default function Login() {
             {notice}
           </div>
         )}
-        
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
@@ -116,12 +116,16 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!needsSetup && (
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="username-input"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Username
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
+                  id="username-input"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -138,30 +142,62 @@ export default function Login() {
             </div>
           )}
 
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              {needsSetup ? 'New Password' : 'Password'}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder={needsSetup ? 'Create a strong password' : 'Enter password'}
-              />
+          {needsSetup && (
+            <div>
+              <label
+                htmlFor="new-password-input"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                New Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  id="new-password-input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Create a strong password"
+                />
+              </div>
             </div>
-          </div>
+          )}
+
+          {!needsSetup && (
+            <div>
+              <label
+                htmlFor="password-input"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  id="password-input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Enter password"
+                />
+              </div>
+            </div>
+          )}
 
           {needsSetup && (
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="confirm-password-input"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Confirm Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
+                  id="confirm-password-input"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}

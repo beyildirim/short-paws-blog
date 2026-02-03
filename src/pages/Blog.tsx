@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Calendar, Clock, ChevronRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -45,8 +45,23 @@ function Blog() {
     return filteredPosts.filter((post) => post.tags.includes(activeTag));
   }, [filteredPosts, activeTag]);
 
+  const statusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (statusTimeoutRef.current) {
+        clearTimeout(statusTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (statusTimeoutRef.current) {
+      clearTimeout(statusTimeoutRef.current);
+    }
+
     const result = await subscribe(email);
     setSubscribeStatus({ message: result.message, isError: !result.success });
 
@@ -55,7 +70,10 @@ function Blog() {
     }
 
     // Clear status after 5 seconds
-    setTimeout(() => setSubscribeStatus(null), 5000);
+    statusTimeoutRef.current = setTimeout(() => {
+      setSubscribeStatus(null);
+      statusTimeoutRef.current = null;
+    }, 5000);
   };
 
   return (
