@@ -1,4 +1,4 @@
-import { forwardRef, type SelectHTMLAttributes } from 'react';
+import { forwardRef, type SelectHTMLAttributes, useId } from 'react';
 
 interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label?: string;
@@ -8,7 +8,8 @@ interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
     ({ label, error, options, className = '', id, ...props }, ref) => {
-        const selectId = id || `select-${label?.toLowerCase().replace(/\s+/g, '-')}`;
+        const generatedId = useId();
+        const selectId = id || (label ? `select-${label.toLowerCase().replace(/\s+/g, '-')}` : `select-${generatedId}`);
 
         return (
             <div>

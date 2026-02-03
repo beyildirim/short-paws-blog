@@ -1,4 +1,4 @@
-import { forwardRef, type TextareaHTMLAttributes } from 'react';
+import { forwardRef, type TextareaHTMLAttributes, useId } from 'react';
 
 interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
@@ -7,7 +7,8 @@ interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> 
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
     ({ label, error, className = '', id, rows = 3, ...props }, ref) => {
-        const textareaId = id || `textarea-${label?.toLowerCase().replace(/\s+/g, '-')}`;
+        const generatedId = useId();
+        const textareaId = id || (label ? `textarea-${label.toLowerCase().replace(/\s+/g, '-')}` : `textarea-${generatedId}`);
 
         return (
             <div>

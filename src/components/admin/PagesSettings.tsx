@@ -115,7 +115,7 @@ export function PagesSettings({ content, onChange, onSave }: PagesSettingsProps)
                         <FormTextarea
                             label="Skills (one per line)"
                             value={content.about.skills.join('\n')}
-                            onChange={(e) => updateAbout('skills', e.target.value.split('\n').filter(s => s.trim()))}
+                            onChange={(e) => updateAbout('skills', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
                             rows={4}
                         />
                         <FormTextarea

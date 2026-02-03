@@ -127,18 +127,24 @@ export function SiteSettings({
                     <h3 className="text-lg font-bold text-purple-600">Social Links</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
+                            id="social-twitter"
+                            label="Twitter"
                             type="url"
                             value={settingsData.social.twitter}
                             onChange={(e) => updateSocial('twitter', e.target.value)}
                             placeholder="Twitter URL"
                         />
                         <FormInput
+                            id="social-linkedin"
+                            label="LinkedIn"
                             type="url"
                             value={settingsData.social.linkedin}
                             onChange={(e) => updateSocial('linkedin', e.target.value)}
                             placeholder="LinkedIn URL"
                         />
                         <FormInput
+                            id="social-github"
+                            label="GitHub"
                             type="url"
                             value={settingsData.social.github}
                             onChange={(e) => updateSocial('github', e.target.value)}
@@ -152,12 +158,14 @@ export function SiteSettings({
                     <h3 className="text-lg font-bold text-purple-600">Author Profile</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
+                            id="author-name"
                             label="Name"
                             value={settingsData.author.name}
                             onChange={(e) => updateAuthor('name', e.target.value)}
                             placeholder="Author name"
                         />
                         <FormInput
+                            id="author-role"
                             label="Role"
                             value={settingsData.author.role}
                             onChange={(e) => updateAuthor('role', e.target.value)}
@@ -165,6 +173,7 @@ export function SiteSettings({
                         />
                     </div>
                     <FormTextarea
+                        id="author-bio"
                         label="Bio"
                         value={settingsData.author.bio}
                         onChange={(e) => updateAuthor('bio', e.target.value)}
@@ -172,6 +181,7 @@ export function SiteSettings({
                         placeholder="Short bio"
                     />
                     <FormInput
+                        id="author-avatar"
                         label="Avatar URL"
                         type="url"
                         value={settingsData.author.avatar}
@@ -186,8 +196,8 @@ export function SiteSettings({
                     {passwordMessage && (
                         <div
                             className={`border px-3 py-2 rounded text-sm ${passwordMessage.type === 'error'
-                                    ? 'bg-red-50 border-red-200 text-red-700'
-                                    : 'bg-green-50 border-green-200 text-green-700'
+                                ? 'bg-red-50 border-red-200 text-red-700'
+                                : 'bg-green-50 border-green-200 text-green-700'
                                 }`}
                         >
                             {passwordMessage.text}

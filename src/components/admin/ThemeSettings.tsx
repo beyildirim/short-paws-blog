@@ -49,10 +49,11 @@ export function ThemeSettings({ themeData, onChange, onSave }: ThemeSettingsProp
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="theme-secondary-color" className="block text-sm font-medium text-gray-700 mb-1">
                         Secondary Color
                     </label>
                     <input
+                        id="theme-secondary-color"
                         type="color"
                         value={themeData.secondaryColor}
                         onChange={(e) => handleChange('secondaryColor', e.target.value)}
@@ -60,10 +61,11 @@ export function ThemeSettings({ themeData, onChange, onSave }: ThemeSettingsProp
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="theme-accent-color" className="block text-sm font-medium text-gray-700 mb-1">
                         Accent Color
                     </label>
                     <input
+                        id="theme-accent-color"
                         type="color"
                         value={themeData.accentColor}
                         onChange={(e) => handleChange('accentColor', e.target.value)}

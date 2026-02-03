@@ -14,8 +14,8 @@ export function BookmarkButton({
     showLabel = false,
     className = ''
 }: BookmarkButtonProps) {
-    const bookmarked = useBookmarkStore((state) => state.bookmarkedPosts.includes(postId));
-    const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+    const { toggleBookmark } = useBookmarkStore();
+    const bookmarked = useBookmarkStore(state => state.bookmarkedPosts.includes(postId));
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -27,8 +27,8 @@ export function BookmarkButton({
         <button
             onClick={handleClick}
             className={`flex items-center gap-1 transition-all duration-300 ${bookmarked
-                    ? 'text-purple-600 scale-110'
-                    : 'text-gray-400 hover:text-purple-500'
+                ? 'text-purple-600 scale-110'
+                : 'text-gray-400 hover:text-purple-500'
                 } ${className}`}
             aria-label={bookmarked ? 'Remove from reading list' : 'Add to reading list'}
             title={bookmarked ? 'Remove from reading list' : 'Save for later'}
