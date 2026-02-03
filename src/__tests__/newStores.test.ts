@@ -70,7 +70,6 @@ describe('bookmarkStore', () => {
 describe('viewsStore', () => {
     beforeEach(() => {
         // Reset the store state
-        const { result } = renderHook(() => useViewsStore());
         act(() => {
             useViewsStore.setState({ views: {}, viewedInSession: new Set() });
         });
