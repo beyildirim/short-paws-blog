@@ -560,7 +560,7 @@ describe('pages', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'draft' } });
     const addDate = document.querySelector('input[type="date"]') as HTMLInputElement;
     fireEvent.change(addDate, { target: { value: '2024-01-02' } });
-    fireEvent.change(screen.getByPlaceholderText('Cover image URL (optional)'), { target: { value: 'https://example.com/cover.jpg' } });
+    fireEvent.change(screen.getByPlaceholderText('Cover image URL or /images/filename.jpg'), { target: { value: 'https://example.com/cover.jpg' } });
     fireEvent.change(screen.getByPlaceholderText('Excerpt'), { target: { value: 'Excerpt' } });
     fireEvent.change(screen.getByPlaceholderText('Content (markdown supported)'), { target: { value: 'Content' } });
     fireEvent.click(screen.getByText('Save'));
@@ -589,7 +589,7 @@ describe('pages', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'scheduled' } });
     const editDate = document.querySelector('input[type="date"]') as HTMLInputElement;
     fireEvent.change(editDate, { target: { value: '2024-02-02' } });
-    fireEvent.change(screen.getByPlaceholderText('Cover image URL (optional)'), { target: { value: 'https://example.com/cover2.jpg' } });
+    fireEvent.change(screen.getByPlaceholderText('Cover image URL or /images/filename.jpg'), { target: { value: 'https://example.com/cover2.jpg' } });
     fireEvent.change(screen.getByDisplayValue('Test excerpt'), { target: { value: 'Edited excerpt' } });
     fireEvent.change(screen.getByDisplayValue('Test content'), { target: { value: 'Edited content' } });
     fireEvent.click(screen.getByText('Save'));
