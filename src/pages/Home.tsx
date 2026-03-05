@@ -14,6 +14,11 @@ function Home() {
         <meta name="description" content={settings.description} />
         <meta property="og:title" content={settings.title} />
         <meta property="og:description" content={settings.description} />
+        <link
+          rel="preload"
+          as="image"
+          href={settings.content.home.profileImage}
+        />
       </Helmet>
       {/* Header with marquee */}
       <div className={`bg-[rgb(var(--color-accent))] ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] rounded-lg p-4 mb-8 shadow-lg relative overflow-hidden`}>
@@ -45,7 +50,7 @@ function Home() {
         </div>
         <div className="flex items-center justify-center mb-4">
           <ResponsiveImage
-            src={settings.content.home.profileImage}
+            src={settings.content.home.profileImage + (settings.content.home.profileImage.includes('unsplash.com') ? '&fm=webp' : '')}
             alt="Profile"
             className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover animate-float`}
             loading="eager"
