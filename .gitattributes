@@ -1,0 +1,7 @@
+# Netlify Large Media - track binary image files
+public/images/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+public/images/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+public/images/**/*.png filter=lfs diff=lfs merge=lfs -text
+public/images/**/*.gif filter=lfs diff=lfs merge=lfs -text
+public/images/**/*.webp filter=lfs diff=lfs merge=lfs -text
+public/images/**/*.avif filter=lfs diff=lfs merge=lfs -text

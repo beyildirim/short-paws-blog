@@ -76,7 +76,7 @@ export function PostEditor({
                 </div>
                 <FormInput
                     type="url"
-                    placeholder="Cover image URL (optional)"
+                    placeholder="Cover image URL or /images/filename.jpg"
                     value={formData.coverImage}
                     onChange={(e) => handleChange('coverImage', e.target.value)}
                 />
