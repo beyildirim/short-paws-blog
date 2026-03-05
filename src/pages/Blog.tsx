@@ -91,14 +91,29 @@ function Blog() {
           </h2>
 
           <div className="mb-6 space-y-4">
-            <BlogSearch onSearch={setSearchQuery} />
+            <BlogSearch onSearch={setSearchQuery} key={searchQuery === '' ? 'reset' : 'active'} />
             <TagFilter tags={tags} activeTag={activeTag} onChange={setActiveTag} />
           </div>
 
           {visiblePosts.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 text-lg mb-2">No posts found 😿</p>
-              <p className="text-gray-500">Try a different search term</p>
+              <p className="text-4xl mb-4">🐱</p>
+              <p className="text-gray-600 text-lg mb-2">No posts found</p>
+              <p className="text-gray-500 mb-4">
+                {searchQuery
+                  ? `No results for "${searchQuery}"`
+                  : 'No posts match the selected tag'}
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveTag(null);
+                }}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                aria-label="Clear filters"
+              >
+                Clear filters
+              </button>
             </div>
           ) : (
             <>
