@@ -295,4 +295,29 @@ describe('components', () => {
     const { container } = render(<MarkdownContent content="**bold**" />);
     expect(container.querySelector('div')?.innerHTML).toContain('<strong>');
   });
+
+  describe('TagFilter accessibility', () => {
+    const tags = ['career', 'planning'];
+    const onChange = jest.fn();
+
+    it('has role="group" with aria-label', () => {
+      render(<TagFilter tags={tags} activeTag={null} onChange={onChange} />);
+      const group = screen.getByRole('group', { name: /filter by tag/i });
+      expect(group).toBeInTheDocument();
+    });
+
+    it('sets aria-pressed on active tag', () => {
+      render(<TagFilter tags={tags} activeTag="career" onChange={onChange} />);
+      const careerBtn = screen.getByText('#career');
+      expect(careerBtn).toHaveAttribute('aria-pressed', 'true');
+      const planningBtn = screen.getByText('#planning');
+      expect(planningBtn).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    it('sets aria-pressed on All button when no tag active', () => {
+      render(<TagFilter tags={tags} activeTag={null} onChange={onChange} />);
+      const allBtn = screen.getByText('All');
+      expect(allBtn).toHaveAttribute('aria-pressed', 'true');
+    });
+  });
 });

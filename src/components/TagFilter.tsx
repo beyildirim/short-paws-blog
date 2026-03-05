@@ -8,9 +8,10 @@ export function TagFilter({ tags, activeTag, onChange }: TagFilterProps) {
   if (tags.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by tag">
       <button
         onClick={() => onChange(null)}
+        aria-pressed={activeTag === null}
         className={`px-3 py-1 rounded-full text-sm border transition-colors ${
           activeTag === null
             ? 'bg-purple-600 text-white border-purple-600'
@@ -23,6 +24,7 @@ export function TagFilter({ tags, activeTag, onChange }: TagFilterProps) {
         <button
           key={tag}
           onClick={() => onChange(tag)}
+          aria-pressed={activeTag === tag}
           className={`px-3 py-1 rounded-full text-sm border transition-colors ${
             activeTag === tag
               ? 'bg-purple-600 text-white border-purple-600'

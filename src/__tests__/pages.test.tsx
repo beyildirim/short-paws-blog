@@ -135,7 +135,9 @@ describe('pages', () => {
     act(() => {
       jest.advanceTimersByTime(300);
     });
-    expect(screen.getByText('No posts found 😿')).toBeInTheDocument();
+    expect(screen.getByText('No posts found')).toBeInTheDocument();
+    expect(screen.getByText('No results for "nope"')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText('Email address for newsletter'), { target: { value: 'user@example.com' } });
     fireEvent.submit(screen.getByRole('button', { name: 'Subscribe' }).closest('form') as HTMLFormElement);
