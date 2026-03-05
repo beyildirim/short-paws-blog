@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Cat, Stars, Sparkles, Flower, Flower2, BookOpen, Lock } from 'lucide-react';
+import { Cat, Stars, Sparkles, Flower, Flower2, BookOpen, Lock, Rss } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useSettingsStore } from './store/settingsStore';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -46,6 +46,7 @@ function App() {
         <Helmet>
           <title>{settings.title}</title>
           <meta name="description" content={settings.description} />
+          <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <style>
             {`
@@ -112,6 +113,13 @@ function App() {
                     <Sparkles className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
                     <span>Contact</span>
                   </Link>
+                  <a
+                    href="/rss.xml"
+                    className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300"
+                    aria-label="RSS Feed"
+                  >
+                    <Rss className="inline-block" size={ICON_SIZE.LARGE} aria-hidden="true" />
+                  </a>
                   {adminEnabled && (
                     <Link to={ROUTES.ADMIN_LOGIN} className="text-[rgb(var(--color-primary))] hover:text-[rgb(var(--color-secondary))] font-bold text-lg transition-colors duration-300">
                       <Lock className="inline-block mr-2" size={ICON_SIZE.LARGE} aria-hidden="true" />
