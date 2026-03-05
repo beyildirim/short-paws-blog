@@ -562,14 +562,14 @@ describe('pages', () => {
     fireEvent.change(addDate, { target: { value: '2024-01-02' } });
     fireEvent.change(screen.getByPlaceholderText('Cover image URL (optional)'), { target: { value: 'https://example.com/cover.jpg' } });
     fireEvent.change(screen.getByPlaceholderText('Excerpt'), { target: { value: 'Excerpt' } });
-    fireEvent.change(screen.getByPlaceholderText('Content'), { target: { value: 'Content' } });
+    fireEvent.change(screen.getByPlaceholderText('Content (markdown supported)'), { target: { value: 'Content' } });
     fireEvent.click(screen.getByText('Save'));
     expect(addPost).toHaveBeenCalled();
 
     fireEvent.click(screen.getByText('Add New Post'));
     fireEvent.change(screen.getByPlaceholderText('Title'), { target: { value: 'No Date' } });
     fireEvent.change(screen.getByPlaceholderText('Excerpt'), { target: { value: 'Excerpt' } });
-    fireEvent.change(screen.getByPlaceholderText('Content'), { target: { value: 'Content' } });
+    fireEvent.change(screen.getByPlaceholderText('Content (markdown supported)'), { target: { value: 'Content' } });
     fireEvent.click(screen.getByText('Save'));
     expect(addPost).toHaveBeenCalled();
 
