@@ -262,7 +262,7 @@ describe('components', () => {
   it('ErrorBoundary renders fallback on error and resets', () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const originalAssign = window.location.assign;
-    let assignSpy: jest.Mock | null = null;
+    let assignSpy: jest.Mock | null;
     try {
       assignSpy = jest.fn();
       Object.defineProperty(window.location, 'assign', {

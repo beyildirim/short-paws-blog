@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Cat, Stars, BookOpen, Sparkles, Lock } from 'lucide-react';
+import { Menu, X, Cat, Stars, BookOpen, Sparkles, Lock, Rss } from 'lucide-react';
 import { getEnvBoolean } from '../utils/env';
 import { ROUTES } from '../constants';
 
@@ -81,7 +81,15 @@ export function MobileNav() {
           </div>
 
           <div className="mt-auto pt-6 border-t border-gray-200">
-            <p className="text-xs text-center text-gray-500">
+            <a
+              href="/rss.xml"
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-purple-600 transition-colors"
+              aria-label="RSS Feed"
+            >
+              <Rss size={16} />
+              <span className="text-sm">RSS Feed</span>
+            </a>
+            <p className="text-xs text-center text-gray-500 mt-2">
               Gizmeli Kedi's Blog 🐱
             </p>
           </div>

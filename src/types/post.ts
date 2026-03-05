@@ -13,5 +13,6 @@ export interface Post {
   coverImage?: string;
   author?: string;
   readTime?: string;
+  featured?: boolean;
   source: 'content' | 'local';
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { Calendar, Clock, ChevronRight, BookOpen } from 'lucide-react';
+import { Calendar, Clock, ChevronRight, BookOpen, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { iconMap } from '../store/blogStore';
@@ -41,8 +41,14 @@ function Blog() {
   }, [posts, searchQuery]);
 
   const visiblePosts = useMemo(() => {
-    if (!activeTag) return filteredPosts;
-    return filteredPosts.filter((post) => post.tags.includes(activeTag));
+    const filtered = activeTag
+      ? filteredPosts.filter((post) => post.tags.includes(activeTag))
+      : filteredPosts;
+    return [...filtered].sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    });
   }, [filteredPosts, activeTag]);
 
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -147,6 +153,9 @@ function Blog() {
                         </div>
                         <div className="flex-grow">
                           <h3 className="text-xl font-bold text-purple-600 mb-2">
+                            {post.featured && (
+                              <Star className="inline-block mr-1 text-yellow-500 fill-yellow-500" size={18} aria-label="Featured post" />
+                            )}
                             {post.title}
                           </h3>
                           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
