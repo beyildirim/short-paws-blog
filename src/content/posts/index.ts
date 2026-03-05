@@ -14,6 +14,7 @@ interface Frontmatter {
   icon?: Post['icon'];
   coverImage?: string;
   author?: string;
+  featured?: boolean;
 }
 
 export type GlobLoader = (
@@ -76,6 +77,7 @@ const buildContentPosts = (rawModules: Record<string, string>): Post[] =>
         coverImage: frontmatter.coverImage,
         author: frontmatter.author,
         readTime: estimateReadTime(content),
+        featured: frontmatter.featured || false,
         source: 'content',
       } satisfies Post;
     })

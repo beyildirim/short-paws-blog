@@ -11,6 +11,7 @@ interface PostEditorFormData {
     status: string;
     publishedAt: string;
     coverImage: string;
+    featured: boolean;
 }
 
 interface PostEditorProps {
@@ -75,6 +76,15 @@ export function PostEditor({
                     value={formData.coverImage}
                     onChange={(e) => handleChange('coverImage', e.target.value)}
                 />
+                <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input
+                        type="checkbox"
+                        checked={formData.featured}
+                        onChange={(e) => handleChange('featured', e.target.checked)}
+                        className="w-4 h-4 text-purple-600 border-purple-300 rounded focus:ring-purple-500"
+                    />
+                    Featured post (pinned to top of blog listing)
+                </label>
                 <FormTextarea
                     placeholder="Excerpt"
                     value={formData.excerpt}

@@ -42,6 +42,7 @@ const emptyFormData: PostEditorFormData = {
   status: 'published',
   publishedAt: '',
   coverImage: '',
+  featured: false,
 };
 
 export default function Dashboard() {
@@ -86,6 +87,7 @@ export default function Dashboard() {
       status: post.status,
       publishedAt: post.publishedAt ? post.publishedAt.slice(0, 10) : '',
       coverImage: post.coverImage ?? '',
+      featured: post.featured ?? false,
     });
   };
 
@@ -106,6 +108,7 @@ export default function Dashboard() {
       status: formData.status as BlogPost['status'],
       publishedAt,
       coverImage: formData.coverImage || undefined,
+      featured: formData.featured,
     };
 
     if (editing) {
