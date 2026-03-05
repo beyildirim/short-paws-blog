@@ -6,7 +6,7 @@ import type { Plugin } from 'vite';
 export interface PostMeta {
   slug: string;
   publishedAt: string;
-  status: string;
+  status: 'published' | 'draft' | 'scheduled';
   title?: string;
   excerpt?: string;
 }
@@ -37,7 +37,7 @@ export function scanPosts(postsDir: string): PostMeta[] {
     return {
       slug,
       publishedAt,
-      status: (fm.status as string) || 'published',
+      status: (fm.status as PostMeta['status']) || 'published',
       title: (fm.title as string) || slug,
       excerpt: (fm.excerpt as string) || '',
     };
@@ -94,15 +94,19 @@ ${items.join('\n')}
 }
 
 export function escapeXml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
 export function staticFeedsPlugin(options: { siteUrl: string; siteTitle: string; siteDescription: string }): Plugin {
+  let root: string;
   return {
     name: 'static-feeds',
+    configResolved(config) {
+      root = config.root;
+    },
     closeBundle() {
-      const postsDir = resolve(import.meta.dirname, '../src/content/posts');
-      const outDir = resolve(import.meta.dirname, '../dist');
+      const postsDir = resolve(root, 'src/content/posts');
+      const outDir = resolve(root, 'dist');
       const posts = scanPosts(postsDir);
 
       writeFileSync(join(outDir, 'sitemap.xml'), generateSitemap(options.siteUrl, posts));
