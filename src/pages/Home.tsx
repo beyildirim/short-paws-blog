@@ -50,7 +50,7 @@ function Home() {
         </div>
         <div className="flex items-center justify-center mb-4">
           <ResponsiveImage
-            src={settings.content.home.profileImage + (settings.content.home.profileImage.includes('unsplash.com') ? '&fm=webp' : '')}
+            src={(() => { try { return new URL(settings.content.home.profileImage).hostname.endsWith('unsplash.com') ? settings.content.home.profileImage + '&fm=webp' : settings.content.home.profileImage; } catch { return settings.content.home.profileImage; } })()}
             alt="Profile"
             className={`w-48 h-48 rounded-full ${settings.theme.borderStyle} border-[rgb(var(--color-secondary))] object-cover animate-float`}
             loading="eager"
