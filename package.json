@@ -17,8 +17,8 @@
   "dependencies": {
     "dompurify": "^3.3.2",
     "js-yaml": "^4.1.1",
-    "lucide-react": "^0.576.0",
-    "marked": "^17.0.3",
+    "lucide-react": "^0.577.0",
+    "marked": "^17.0.4",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-helmet-async": "^3.0.0",
